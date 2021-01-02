@@ -1,0 +1,317 @@
+<!--
+The "bigbook" archive and the ebook sources are in this KeyML format.
+
+KeyML is a subset of XHTML 1.1 that can represent any text from the
+Hooting Yard blog, can be used in an EPUB 2.1, and contains sufficient
+information for translation into LaTeX to create print books.
+
+KeyML is defined in this XML DTD. Übercoördinator only accepts document
+files matching this DTD. The Hooting Yard text archives should only be
+saved in KeyML.  (KeyML can expanded if necessary.)
+
+The utility 'bigbook.py' can be used to check that files comply
+with KeyML.
+
+A KeyML file should have an XHTML 1.1 Strict XML header.
+
+KeyML does not distinguish between short stories, blog post and book
+chapters.  But neither did Frank Key, really.
+
+Below is the KeyML subset. Note that KeyML does not allow multiple
+classes in a single class attribute, e.g. <p class="noindent center">
+will be rejected.
+
+-->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Entities -->
+
+<!-- In KeyML Unicode should be used for characters, not entities. 
+     The exeption is &nbsp; which would otherwise be invisible. -->
+
+<!ENTITY  nbsp "&#xa0;">
+
+
+<!-- content types -->
+
+<!ENTITY % BLOCK "p | hr | div | blockquote | ol | ul | h2"> 
+
+<!ENTITY % TITLE "#PCDATA | em" > 
+
+<!ENTITY % INLINE "#PCDATA | em | strong | del | br | a | img | sup | small | tt | span" > 
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- html and head elements -->
+
+<!-- I've been using XHTML 1.1, which is what goes in ePub 2.0 -->
+<!-- Lxml adds the 'xmlns:xsi' tag sometimes. I don't know why. -->
+
+<!ELEMENT html (head, body)>
+<!ATTLIST html 
+   xmlns CDATA #FIXED "http://www.w3.org/1999/xhtml"
+   xmlns:xsi CDATA #IMPLIED
+>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- head -->
+
+<!ELEMENT head (meta?, title, meta, meta, meta, meta, meta, meta, link)>
+
+<!ELEMENT title (#PCDATA)>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- meta -->
+
+<!ELEMENT meta EMPTY>
+
+<!ATTLIST meta
+    name (author | description | language | generator | date) #IMPLIED
+    http-equiv CDATA  #IMPLIED
+    content CDATA #REQUIRED
+>
+
+<!-- 'author'      is "Frank Key"
+     'language'    is typically "en-GB" for Hooting Yard
+     'date'        the date the page was generated, in ISO format.
+     'generator'   is "Scralled in GreasePencil."
+     'description' is the ebook's description from 'bookdata.json' -->
+
+
+<!-- the single link element is fixed to the ebub's stylesheet -->
+
+<!ELEMENT link EMPTY>
+
+<!ATTLIST link
+    href CDATA #FIXED "../Styles/style.css"
+    rel  CDATA #FIXED "stylesheet"
+    type CDATA #FIXED "text/css"
+>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- body -->
+
+<!-- Bodies always simple h1 headers containing the page title
+     The exception is "Quote of the Day", the actual title in
+     the toc.xhtml file is preferable.
+     
+     One text div may proceed the title if necessary. -->
+
+<!ELEMENT body ((div?, h1, ( %BLOCK; )+)) >
+
+<!ATTLIST body class CDATA #IMPLIED>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- BLOCK TEXT  -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- ol and ul lists -->
+
+<!-- ol.contents is used on the Contents page only -->
+
+<!ELEMENT ol (li+) >
+
+<!ELEMENT ul (li+) >
+
+<!ATTLIST ol 
+    class (contents) #IMPLIED
+    start CDATA #IMPLIED
+>
+
+<!ELEMENT li ( %INLINE; )* >
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- h1 and h2 headings -->
+
+<!--
+    class="plain"    titles rendered in the body font
+    class="centered" centered titles, for use of all the content is centered
+    class="discrete" normal sized bold text, for use on the title page
+    class="preen"    all in lowercase
+-->
+
+
+<!-- h1 is used to head pages only, and contains the page title. -->
+
+<!ELEMENT h1 ( %TITLE; )* >
+
+<!ATTLIST h1 
+   class (plain | centered | discrete) #IMPLIED
+   id CDATA #IMPLIED
+>
+
+
+<!-- h2 can head sections in pages h2 heading may contain links. -->
+
+<!ELEMENT h2 ( %TITLE; | a )* >
+
+<!ATTLIST h2
+    class (plain | centered | discrete | preen) #IMPLIED
+>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- hr breaks -->
+
+<!-- These are for breaks between groups of paragraphs,
+     They are nomally invisible. -->
+
+<!ELEMENT hr EMPTY>
+
+<!ATTLIST hr
+    class (visible | newpage) #IMPLIED
+>
+
+<!--
+    class="visible"  rule a line across the page
+    class="newpage"  start a new page here (for print books)
+-->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- blockquotes -->
+
+<!ELEMENT blockquote ( %BLOCK; )* >
+
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- paragraphs -->
+
+
+<!ELEMENT p ( %INLINE; )* >
+
+<!ATTLIST p class ( verse | textbreak | imagerow | caption |byline |
+                    footnote | editor | centered | source | lines | invisible ) #IMPLIED>
+
+<!--
+    class="verse"      a stanza of verse containing br linkbreaks
+    class="textbreak"  page break containing a decorative element
+    class="imagerow"   a row of images  inside a <div class="illustration">
+    class="caption"    a caption to an image inside a <div class="illustration">
+    class="byline"     an attribution directly under a heading
+    class="footnote"   a footnote
+    class="editor"     an editor's footnote
+    class="centered"   centered paragraphs      
+    class="lines"      text seperated into lines by <br/>, but not verse      
+    class="invisible"  paragraph that cannot be seen
+-->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- INLINE TEXT  -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!ELEMENT span ( %INLINE; )* >
+
+<!ATTLIST span 
+    class (mark | asterisk | broken) #IMPLIED
+    title CDATA #IMPLIED
+>
+
+<!--
+    class="astrisk"  an asterisk for a footnote
+    class="mark"     the asterisk in a footnote
+    class="broken">  a forever broken link
+-->
+
+
+<!-- typewritten text -->
+
+<!ELEMENT tt (#PCDATA | strong | em)* >
+
+<!ATTLIST tt
+    class (emoticon) #IMPLIED
+>
+
+
+<!ELEMENT em     ( %INLINE; )* >
+<!ELEMENT del    ( %INLINE; )* >
+<!ELEMENT sup    ( %INLINE; )* >
+<!ELEMENT small  ( %INLINE; )* >
+<!ELEMENT strong ( %INLINE; )* >
+
+<!ATTLIST strong
+    class (mark | asterisk) #IMPLIED
+>
+
+
+<!-- br breaks are used in <p class="verse"> paragraphs -->
+
+<!ELEMENT br EMPTY>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- a links -->
+
+
+<!ELEMENT a ( %INLINE; )* >
+
+<!ATTLIST a
+    href  CDATA #REQUIRED
+    title CDATA #IMPLIED
+    class ( internal | internal-pdf | internal-image | internal-audio |
+            external | hootingyard ) #IMPLIED
+>
+
+<!--
+    class="external"         page on the internet
+    class="hootingyard"      page on hootingyard.org
+    class="internal"         another page in Text directory 
+    class="internal-image"   image in the Images directory 
+    class="internal-audio"   audio file in the Media directory 
+    class="internal-pdf"     PDF file in the Media directory
+-->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- img  images -->
+
+<!-- These are only allowed in <div class="illustration"> blocks.
+     Sometimes there are in <a> elements when Frank instructs
+     "click on the picture". -->
+
+
+<!ELEMENT img EMPTY>
+<!ATTLIST img
+    src   CDATA #REQUIRED
+    alt   CDATA #REQUIRED
+    class (full | medium | large | small | fullwidth) #IMPLIED
+>
+
+
+<!--
+    class="small"      postage stamp size
+    class="medium"     
+    class="large"      
+    class="full"       dominate the page
+    class="fullwidth"  span the full width of the typeblock
+    src                must be in the ../Images directory
+    alt                either a caption or the filename
+-->    
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- div  -->
+
+
+<!ELEMENT div ( %BLOCK; )* >
+
+<!ATTLIST div
+     class (contents | illustration | blockparagraphs | verse) #REQUIRED
+>
+
+<!--
+    class="contents"  
+    class="illustration"  
+    class="blockparagraphs"  
+    class="verse"  
+-->
