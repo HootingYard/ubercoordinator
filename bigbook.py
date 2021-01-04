@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
-"""This tests that Big Book of Key XHTML files:
+"""
+This tests that Big Book of Key XHTML files:
+
     (a) match a DTD, typically bigbook.dtd;
+
     (b) pass a set of Schematron tests, typically in bigbook.sch;
+
     (c) contain no broken relative links.
+
 Optionally all linked image files can be checked for validity.
 """
 
 # The default DTD and Schematron files should reside in the same
 # directory as this script.
+
 
 from sys import stderr, exit
 from pathlib import Path
@@ -32,7 +38,7 @@ __all__ = ['settings', 'run']
 
 
 # XML namespaces for everything that might be used.
-# (Most of these are for Schematron.)
+# (Most of these are for parsing Schematron 'svrl' errors.)
 XMLNS = {
     "xhtml": "http://www.w3.org/1999/xhtml",
     "regexp": "http://exslt.org/regular-expressions",
@@ -45,8 +51,10 @@ XMLNS = {
 
 
 class Settings:
-    """ Global settings.
-        These are set by the 'argparse' command line."""
+    """
+    Global settings.
+    These are set by the 'argparse' command line.
+    """
     dtd: Path          # path to the DTD file
     schematron: Path   # path to the Schematron file
     files: List[Path]  # XHTML files to test
@@ -54,10 +62,11 @@ class Settings:
     verbose: bool      # if True print the names of files as they are checked
 
     def __init__(self):
-        """ Set defaults.
-            The default Schematron and DTD files are in the same
-            directory as this script's source file (i.e. the one
-            you ar reading now).
+        """
+        Set defaults.
+        The default Schematron and DTD files are in the same
+        directory as this script's source file (i.e. the one
+        you ar reading now).
         """
         self.test_images = False
         self.verbose = False
@@ -74,9 +83,11 @@ settings = Settings()
 
 
 def run(xhtml_files: List[Path]) -> bool:
-    """ Run tests on a bunch of XHTML files.
-        All files are tested, even if one fails.
-        Error messages are printed to stderr for files that fail.
+    """
+    Run tests on a bunch of XHTML files.
+    All files are tested, even if one fails.
+    Error messages are printed to stderr for files that fail.
+
     :param xhtml_files: the files
     :return: True if everything passes
     """
@@ -90,8 +101,10 @@ def run(xhtml_files: List[Path]) -> bool:
 
 
 def test(xhtml_file: Path, dtd: DTD, schematron: Schematron) -> bool:
-    """ Test that an XHTML file matches a DTD and passes Schematron tests.
-        Error messages are printed to stderr if the file doesn't pass.
+    """
+    Test that an XHTML file matches a DTD and passes Schematron tests.
+    Error messages are printed to stderr if the file doesn't pass.
+
     :param xhtml_file: the XHTML file to test
     :param dtd: the DTD
     :param schematron: the Schematron
@@ -124,9 +137,11 @@ def test(xhtml_file: Path, dtd: DTD, schematron: Schematron) -> bool:
     return test_links(xhtml_file, html) and test_images(xhtml_file, html)
 
 
-def print_schematron_error_log(html: _Element, schematron: Schematron) -> None:
-    """ Print a Schematron's error log in a readable format.
-    :param html: the root of the XHTML file
+def print_schematron_error_log(xhtml: _Element, schematron: Schematron) -> None:
+    """
+    Print a Schematron's error log in a readable format.
+
+    :param xhtml: the root of the XHTML file with the errors
     :param schematron: the Schematron with the error log
     """
     for e in schematron.error_log:
@@ -137,7 +152,7 @@ def print_schematron_error_log(html: _Element, schematron: Schematron) -> None:
         # Schematron reports the location of the faulty element with an Xpath selectors,
         # look that element up in the document to get the line it appears on.
         location_xpath = xml.xpath('//svrl:failed-assert/@location', namespaces=XMLNS)[0]
-        line = html.xpath(location_xpath, namespaces=XMLNS)[0].sourceline
+        line = xhtml.xpath(location_xpath, namespaces=XMLNS)[0].sourceline
 
         message = xml.xpath('normalize-space(//svrl:text)', namespaces=XMLNS)
 
@@ -145,16 +160,19 @@ def print_schematron_error_log(html: _Element, schematron: Schematron) -> None:
 
 
 def print_error_log(log: _ErrorLog) -> None:
-    """ Print a generic Lxml error log in a readable format.
+    """
+    Print a generic Lxml error log in a readable format.
     """
     for e in log:
         print(f"{e.filename}:{e.line}:{e.column}: {e.message}", file=stderr)
 
 
 def test_images(xhtml_file: Path, xhtml: _Element) -> bool:
-    """ Test the that all 'img' links are not broken.
-        If settings.test_images is True then also use PIL to
-        test if the image files are valid.
+    """
+    Test the that all 'img' links are not broken.
+    If settings.test_images is True then also use PIL to
+    test if the image files are valid.
+
     :param xhtml_file: the XHTML file's path
     :param xhtml: the XHTML files' root
     :return: True if the images are okay
@@ -181,7 +199,9 @@ def test_images(xhtml_file: Path, xhtml: _Element) -> bool:
 
 
 def test_links(xhtml_file: Path, xhtml: _Element) -> bool:
-    """ Test the that all 'a' links to relative URLs links are not broken.
+    """
+    Test the that all 'a' links to relative URLs links are not broken.
+
     :param xhtml_file: the XHTML file's path
     :param xhtml: the XHTML files' root
     :return: True if the links are okay
@@ -200,19 +220,23 @@ def test_links(xhtml_file: Path, xhtml: _Element) -> bool:
 
 
 def open_dtd(dtd_file: Path) -> DTD:
-    """ Open a validate an XML DTD. Exit program on failure.
+    """
+    Open a validate an XML DTD. Exit program on failure.
+
     :param dtd_file: path to a DTD file
     :return: A DTD object
     """
     try:
         return DTD(str(dtd_file))
     except DTDParseError as e:
-        print(f"{dtd_file}: {e}", file=stderr)
+        print(f"{dtd_file}:1: {e}", file=stderr)
         exit(1)
 
 
 def open_schematron(schematron_file: Path) -> Schematron:
-    """ Open a validate a Schematron schema. Exit program on failure.
+    """
+    Open a Schematron schema. Exit program on failure.
+
     :param schematron_file: path to a Schematron XML file
     :return: A Schematron object
     """
@@ -220,13 +244,14 @@ def open_schematron(schematron_file: Path) -> Schematron:
         xml = parse(str(schematron_file))
         return Schematron(xml, store_report=True)
     except XMLSyntaxError as e:
-        print(f"{schematron_file}: {e}", file=stderr)
+        print(f"{schematron_file}:1: {e}", file=stderr)
         exit(1)
 
 
-def main():
-    """ Go nuts with command line arguments.
-        These override the defaults in 'settings'.
+def main() -> None:
+    """
+    Go nuts with command line arguments.
+    These override the defaults in 'settings'.
     """
     parser = ArgumentParser(description=__doc__)
     parser.add_argument(
