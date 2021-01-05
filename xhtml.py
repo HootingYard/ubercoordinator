@@ -1,24 +1,23 @@
 """ Some XHTML handling conveniences.
 """
 
-from copy import deepcopy
 from pathlib import Path
-
 from lxml.html import HtmlElement, XHTMLParser
 from lxml.etree import parse, QName, cleanup_namespaces
 
-__all__ = ['parse_xhtml', 'as_h1_element']
+__all__ = ['parse_xhtml']
 
 
 def parse_xhtml(file: Path) -> HtmlElement:
     """
-    Parse an XHTML file into plain HTML.
+    Parse an XHTML file into plain HTML,
+    i.e. a tree of HTMLElements without namespace annotations.
 
     :param file: XHTML file
-    :return: HTML head element, with no namespaces
+    :return: the 'html' element
     """
-    parser = XHTMLParser(dtd_validation=True, ns_clean=True)
-    html: HtmlElement = parse(str(file), parser=parser).getroot()
+    xhtml_parser = XHTMLParser(dtd_validation=True, ns_clean=True)
+    html: HtmlElement = parse(str(file), parser=xhtml_parser).getroot()
     remove_namespaces(html)
     return html
 
@@ -28,20 +27,3 @@ def remove_namespaces(tree: HtmlElement) -> None:
     for element in tree.getiterator():
         element.tag = QName(element).localname
     cleanup_namespaces(tree)
-
-
-def as_h1_element(element: HtmlElement) -> HtmlElement:
-    """
-    Convert any element into an 'h1' header.
-    Only the 'em' tags in the element will be preserved.
-
-    :param element: the element
-    :return: the h1 element
-    """
-    h1 = deepcopy(element)
-    h1.attrib.clear()
-    h1.tag = 'h1'
-    for element in h1.getiterator():  # type: HtmlElement
-        if element.tag not in ('em', 'h1'):
-            element.drop_tag()
-    return h1
