@@ -2,10 +2,14 @@
 """
 
 from pathlib import Path
-from lxml.html import HtmlElement, XHTMLParser
+from lxml.html import tostring, HtmlElement, XHTMLParser
 from lxml.etree import parse, QName, cleanup_namespaces
 
-__all__ = ['parse_xhtml']
+__all__ = ['parse_xhtml', 'xhtml_string']
+
+
+def xhtml_string(element: HtmlElement) -> str:
+    return tostring(element, encoding='unicode')
 
 
 def parse_xhtml(file: Path) -> HtmlElement:

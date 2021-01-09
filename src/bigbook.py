@@ -149,8 +149,7 @@ def print_schematron_error_log(xhtml: _Element, schematron: Schematron) -> None:
         # The message is a XML string containing an 'srvl:failed-assert' element
         xml = fromstring(e.message)
 
-        # Schematron reports the location of the faulty element with an Xpath selectors,
-        # look that element up in the document to get the line it appears on.
+        # Schematron reports the location of a faulty element with an Xpath selector.
         location_xpath = xml.xpath('//svrl:failed-assert/@location', namespaces=XMLNS)[0]
         line = xhtml.xpath(location_xpath, namespaces=XMLNS)[0].sourceline
 
