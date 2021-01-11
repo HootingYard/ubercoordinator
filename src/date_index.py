@@ -14,7 +14,7 @@ from xhtml import content
 
 def split_blogs(index: Index) -> List[List[Article]]:
     """
-    Splits articles into three dictionaries, one for each
+    Splits index.articles into three lists, one for each
     blog Frank ran. 2003-01-01 and earlier were in the NDDirect website or
     published in pamphlets, 2003-12-01 to 2006-12-31 were the first BTOpenWorld
     blog, 2007-01-01 and later were in the second hootingyard.org blog.

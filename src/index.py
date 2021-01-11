@@ -21,13 +21,13 @@ __all__ = ['Narration', 'Article', 'Show', 'Index', 'first_letter', 'year_month'
 
 class Article:
     """
-    An article, quotation or blog past from one of Frank's previous websites.
+    An story, quotation, book chapter or blog post from one of Frank's previous websites.
 
     :ivar id: the article ID
     :ivar title: the title, in plain Unicode ('link' contains the HTML one)
     :ivar date: date of publication
     :ivar file: Big Book of Key XHTML file
-    :ivar link: an HTML 'a' element containing a links to
+    :ivar link: an HTML 'a' element containing a link to
                 the article's file and its fully formatted title
     :ivar narrations: the article's narrations in Hooting Yard on the Air
     """
@@ -56,9 +56,6 @@ class Article:
 
     def __lt__(self, other: 'Article') -> bool:  # sorts by title
         return self.sorting_key < other.sorting_key
-
-    def first_letter(self) -> str:
-        return self.sorting_key[0].upper()
 
 
 @dataclass
@@ -147,9 +144,11 @@ class Index:
         text_dir = keyml_repo / 'books/bigbook/Text'
         toc_file = text_dir / 'toc.xhtml'
         html = parse_xhtml(toc_file)
+        print(html_tostring(html))
         for a in html.xpath("//div[@class='contents']//a"):  # type: HtmlElement
             article = Article(a, text_dir)
             self.articles[article.id] = article
+            print(repr(article.id))
 
     def _read_shows(self, analysis: Path) -> None:
         export = analysis / 'index/export/export.yaml'

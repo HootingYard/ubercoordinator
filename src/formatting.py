@@ -62,5 +62,3 @@ def ordinal(n: int) -> str:
     '3rd'
     """
     return str(n) + {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 20, 'th')
-
-

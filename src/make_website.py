@@ -47,9 +47,12 @@ def main() -> None:
         html_file.write_text(template.render(index=index))
 
     for article in index.articles.values():
-        # I'm going to be a barbarian and use a regex on HTML...
+        # content = xhtml.content(article.file, heading=True)
+        # I'm going to be a barbarian instead and use a regex on HTML.
+        # It's acceptably accurate on these Big Book files, and much faster.
         html = article.file.read_text()
         content = re.search(r'<body[^>]*>(.+)</body>', html, re.DOTALL)[1]
+        content = content.replace('.xhtml"', '.html"')
         template = templates.get_template('page.html')
         destination = WEBSITE_DIR / 'Text' / (article.id + '.html')
         destination.write_text(template.render(content=content, article=article))
