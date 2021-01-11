@@ -20,7 +20,7 @@ def template_dir() -> Path:
     src_dir = Path(getsourcefile(lambda _: None))  # i.e. this module's directory
     ubercoordinator_dir = src_dir.parent.parent
     assert ubercoordinator_dir.name == 'ubercoordinator'
-    return ubercoordinator_dir / 'website' / 'templates'
+    return ubercoordinator_dir / 'templates' / 'website'
 
 
 def main() -> None:
