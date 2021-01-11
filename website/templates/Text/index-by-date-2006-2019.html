@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<%!
+    from formatting import month_and_year, brief_date
+    from date_index import split_blogs, month_id
+    from itertools import groupby
+    from datetime import datetime
+    from index import year_month
+%>
+<%
+    # index: Index
+    second_blog_stories = split_blogs(index)[2]
+%>
+<html lang="en-GB">
+<head>
+    <title>The Hooting Yard Blog, 2006-2019</title>
+    <meta name="author" content="Hooting Yard Archivists (a.k.a. The Soup Committee)"/>
+    <meta name="description" content="A chronological index of the works by Frank Key."/>
+    <meta name="language" content="en-GB"/>
+    <meta name="generator" content="ÜBERCOÖRDINATOR"/>
+    <meta charset="utf-8"/>
+    <link href="../Styles/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body class="toc">
+
+<div class="illustration">
+    <p class="imagerow"><img class="fullwidth" src="../Images/yardlogo.gif" alt="Hooting Yard Banner"/></p>
+</div>
+
+<h1>Hooting Yard, A Website by Frank Key, 2006–2019</h1>
+
+<div class="contents">
+    % for year, stories in groupby(second_blog_stories, lambda s: s.date.year):
+    <p>
+        <strong>${year}</strong>
+        % for month, _ in groupby(stories, lambda s: s.date.month):
+        <% date = datetime(year, month, 1) %>
+        <a href="#${month_id(date)}">${date.strftime('%b')}</a>
+        % endfor
+    </p>
+    % endfor
+</div>
+
+% for (year, month), months_stories in groupby(second_blog_stories, year_month):
+<% date = datetime(year, month, 1) %>
+<div id="${month_id(date)}" class="contents">
+    <h2>${month_and_year(date)}</h2>
+
+        % for story in months_stories:
+        <p>${story.link}<em>— ${brief_date(story.date)}</em></p>
+        % endfor
+</div>
+% endfor
+
+<p><em>To study these writings in their whole extent, to see
+    them in their minute unfoldment, is a work of years.</em></p>
+</body>
+</html>

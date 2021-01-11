@@ -10,6 +10,7 @@ __all__ = [
     'month_and_year',
     'ordinal',
     'dictionary_order_sorting_key',
+    'first_letter'
 ]
 
 import re

@@ -5,7 +5,7 @@ from pathlib import Path
 from lxml.html import tostring, HtmlElement, XHTMLParser
 from lxml.etree import parse, QName, cleanup_namespaces
 
-__all__ = ['parse_xhtml', 'xhtml_string']
+__all__ = ['parse_xhtml', 'xhtml_string', 'content']
 
 
 def xhtml_string(element: HtmlElement) -> str:
@@ -31,3 +31,19 @@ def remove_namespaces(tree: HtmlElement) -> None:
     for element in tree.getiterator():
         element.tag = QName(element).localname
     cleanup_namespaces(tree)
+
+
+def content(file: Path) -> str:
+    """
+    The content of a story's page, minus its heading, inside a <div> element.
+
+    :param file: a Big Book XHTML file
+    :return: the HTML as a string
+    """
+    html = parse_xhtml(file)
+    body: HtmlElement = html.xpath('//body')[0]
+    heading: HtmlElement = body.xpath('//h1')[0]
+    heading.drop_tree()
+    body.attrib.clear()
+    body.tag = 'div'
+    return tostring(body, pretty_print=True, encoding='unicode')

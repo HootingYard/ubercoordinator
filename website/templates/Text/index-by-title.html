@@ -2,6 +2,7 @@
 <!--suppress HtmlUnknownAnchorTarget -->
 <%!
 from formatting import brief_date
+from index import first_letter
 from itertools import groupby
 %>
 <html lang="en-GB">
@@ -11,7 +12,7 @@ from itertools import groupby
     <meta name="description" content="An alphabetical index of the works by Frank Key." />
     <meta name="language" content="en-GB" />
     <meta name="generator" content="ÜBERCOÖRDINATOR" />
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8"/>
     <link href="../Styles/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="toc">
@@ -54,13 +55,12 @@ from itertools import groupby
             <a href="#Z">Z</a>
         </h2>
 
-        <% def first_letter(story): return story.first_letter() %>
-
         % for letter, stories in groupby(sorted(index.stories.values()), first_letter):
             <div id="${letter}">
                 <h2>${letter} is for…</h2>
                 % for story in stories:
-                <p>${story.link} <em>— ${brief_date(story.date)}</em></p>
+                <p>${story.link}
+                <em>— ${brief_date(story.date)}</em></p>
                 % endfor
             </div>
         % endfor

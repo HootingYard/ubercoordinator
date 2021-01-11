@@ -3,9 +3,9 @@
 This data comes from the 'bigbook/Text/toc.xhtml' file in the HootingYard 'keyml'
 repository and the 'export.yaml' file in the 'archive_management' repository.
 """
-import collections
+
 from dataclasses import dataclass
-from typing import OrderedDict, Dict, List, Any
+from typing import Dict, List, Any, Tuple
 from pathlib import Path
 from datetime import datetime
 
@@ -16,7 +16,7 @@ from formatting import dictionary_order_sorting_key
 from xhtml import parse_xhtml
 
 
-__all__ = ['Narration', 'Story', 'Show', 'Index']
+__all__ = ['Narration', 'Story', 'Show', 'Index', 'first_letter', 'year_month']
 
 
 class Story:
@@ -37,7 +37,7 @@ class Story:
     file: Path
     link: str
     narrations: List['Narration']
-    _sorting_key: str
+    sorting_key: str
 
     def __init__(self, link: HtmlElement, text_dir: Path) -> None:
         """
@@ -49,16 +49,16 @@ class Story:
         self.file = text_dir / link.get('href')
         self.story_id = link.get('href')[:-6]  # remove ".xhtml" suffix
         self.date = datetime.fromisoformat(self.story_id[:10])
-        self.link = html_tostring(link, encoding='unicode')
+        self.link = html_tostring(link, encoding='unicode').replace('.xhtml', '.html')
         self.title = str(link.text_content())
-        self._sorting_key = dictionary_order_sorting_key(self.title)
+        self.sorting_key = dictionary_order_sorting_key(self.title)
         self.narrations = []
 
     def __lt__(self, other: 'Story') -> bool:  # sorts by title
-        return self._sorting_key < other._sorting_key
+        return self.sorting_key < other.sorting_key
 
     def first_letter(self) -> str:
-        return self._sorting_key[0].upper()
+        return self.sorting_key[0].upper()
 
 
 @dataclass
@@ -118,24 +118,24 @@ class Show:
 
 class Index:
     """
-    stories: an ordered dictionary of story ID to Story object.
+    :ivar stories: 'stories' is an ordered dictionary of story ID to Story object.
     the values are in the order that they appear in the Big Book toc.xhtml
     Sorting the values puts them into correct dictionary order.
 
-    shows: an ordered dictionary of show ID to Show object.
+    :ivar shows: 'shows' is an ordered dictionary of show ID to Show object.
     the values are in the order that they appear in the export.yaml
 
-    Story and Show point to intermediate Narration objects that relate
+    Story and Show objects point to intermediate Narration objects that relate
     which stories were read in which shows.
     """
 
-    stories: OrderedDict[str, Story]  # key is story_id
+    stories: Dict[str, Story]  # key is story_id
 
-    shows: OrderedDict[str, Show]  # key is show_id
+    shows: Dict[str, Show]  # key is show_id
 
     def __init__(self, keyml_repo: Path, analysis_repo: Path) -> None:
-        self.shows = collections.OrderedDict()
-        self.stories = collections.OrderedDict()
+        self.shows = {}
+        self.stories = {}
         self._read_stories(keyml_repo)
         self._read_shows(analysis_repo)
 
@@ -165,3 +165,16 @@ class Index:
                                           n['end_time'], n['word_count'])
                     story.narrations.append(narration)
                     show.narrations.append(narration)
+            show.narrations.sort()
+
+
+def first_letter(story: Story) -> str:
+    """ The first letter of a story's title.
+
+    :return: a capital letter
+    """
+    return story.sorting_key[0].upper()
+
+
+def year_month(story: Story) -> Tuple[int, int]:
+    return story.date.year, story.date.month

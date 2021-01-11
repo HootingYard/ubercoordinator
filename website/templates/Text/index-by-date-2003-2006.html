@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<%!
+    from formatting import full_written_date, month_and_year
+    from date_index import split_blogs, arrange_first_blog, month_id
+%>
+<%
+    # index: Index
+    first_blog_stories = split_blogs(index)[1]
+    first_blog = arrange_first_blog(first_blog_stories)
+%>
+<html lang="en-GB">
+<head>
+    <title>The Hooting Yard Blog, 2003-2006</title>
+    <meta name="author" content="Hooting Yard Archivists (a.k.a. The Soup Committee)"/>
+    <meta name="description" content="A chronological index of the works by Frank Key."/>
+    <meta name="language" content="en-GB"/>
+    <meta name="generator" content="ÜBERCOÖRDINATOR"/>
+    <meta charset="utf-8"/>
+    <link href="../Styles/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body class="toc">
+
+<div class="illustration">
+    <p class="imagerow"><img class="fullwidth" src="../Images/yardlogo.gif" alt="Hooting Yard Banner"/></p>
+</div>
+
+<h1>The Hooting Yard Blog, 2003–2006</h1>
+
+<div class="contents">
+
+<dl class="month">
+    % for date, introduction, days in first_blog:
+    <div>
+        <dt><a href="#${month_id(date)}">${month_and_year(date)}</a></dt>
+        % if introduction:
+        <dd>
+            ${introduction}
+        </dd>
+        % endif
+    </div>
+    % endfor
+</dl>
+
+</div>
+
+<div class="blockparagraphs">
+
+% for date, introduction, days in first_blog:
+<div id="${month_id(date)}">
+    <h2>${month_and_year(date)}</h2>
+
+    ${introduction}
+
+    % for date, stories in days:
+    <dl class="day">
+        % for date, stories in days:
+        <div>
+            <dt>${full_written_date(date)}</dt>
+            %for story in stories:
+            <dd>${story.link}</dd>
+            %endfor
+        </div>
+        % endfor
+    </dl>
+    % endfor
+</div>
+% endfor
+
+</div>
+
+<p><em>To study these writings in their whole extent, to see
+    them in their minute unfoldment, is a work of years.</em></p>
+</body>
+</html>
