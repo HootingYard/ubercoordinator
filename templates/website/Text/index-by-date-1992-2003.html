@@ -21,8 +21,8 @@
     <p><em>Frank Key ran <em>The Hooting Yard Home Page</em> from 1992 to 2003. With the aid of a diving bell and the Wayback Machine, this is the content we were able to recover. —Hooting Yard Archivists </em></p>
 
     <div class="contents">
-        % for story in split_blogs(index)[0]:
-        <p>${story.link}</p>
+        % for article in split_blogs(index)[0]:
+        <p>${article.link}</p>
         % endfor
     </div>
 

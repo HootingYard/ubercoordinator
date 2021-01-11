@@ -46,13 +46,13 @@ def main() -> None:
         html_file = WEBSITE_DIR / 'Text' / file.name
         html_file.write_text(template.render(index=index))
 
-    for story in index.stories.values():
+    for article in index.articles.values():
         # I'm going to be a barbarian and use a regex on HTML...
-        html = story.file.read_text()
+        html = article.file.read_text()
         content = re.search(r'<body[^>]*>(.+)</body>', html, re.DOTALL)[1]
         template = templates.get_template('page.html')
-        destination = WEBSITE_DIR / 'Text' / (story.story_id + '.html')
-        destination.write_text(template.render(content=content, story=story))
+        destination = WEBSITE_DIR / 'Text' / (article.id + '.html')
+        destination.write_text(template.render(content=content, article=article))
 
 
 if __name__ == '__main__':

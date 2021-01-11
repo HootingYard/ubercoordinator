@@ -5,8 +5,8 @@
 %>
 <%
     # index: Index
-    first_blog_stories = split_blogs(index)[1]
-    first_blog = arrange_first_blog(first_blog_stories)
+    first_blog_articles = split_blogs(index)[1]
+    first_blog = arrange_first_blog(first_blog_articles)
 %>
 <html lang="en-GB">
 <head>
@@ -51,13 +51,13 @@
 
     ${introduction}
 
-    % for date, stories in days:
+    % for date, articles in days:
     <dl class="day">
-        % for date, stories in days:
+        % for date, articles in days:
         <div>
             <dt>${full_written_date(date)}</dt>
-            %for story in stories:
-            <dd>${story.link}</dd>
+            %for article in articles:
+            <dd>${article.link}</dd>
             %endfor
         </div>
         % endfor

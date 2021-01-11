@@ -16,6 +16,7 @@
           <option value="end_time" />
           <option value="word_count" />
           <option value="blogs" />
+          <option value="article" />
         </list>
       </option>
     </inspection_tool>

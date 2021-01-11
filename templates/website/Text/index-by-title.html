@@ -55,12 +55,12 @@ from itertools import groupby
             <a href="#Z">Z</a>
         </h2>
 
-        % for letter, stories in groupby(sorted(index.stories.values()), first_letter):
+        % for letter, articles in groupby(sorted(index.articles.values()), first_letter):
             <div id="${letter}">
                 <h2>${letter} is for…</h2>
-                % for story in stories:
-                <p>${story.link}
-                <em>— ${brief_date(story.date)}</em></p>
+                % for article in articles:
+                <p>${article.link}
+                <em>— ${brief_date(article.date)}</em></p>
                 % endfor
             </div>
         % endfor

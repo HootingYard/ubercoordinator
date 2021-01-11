@@ -35,7 +35,7 @@ def remove_namespaces(tree: HtmlElement) -> None:
 
 def content(file: Path) -> str:
     """
-    The content of a story's page, minus its heading, inside a <div> element.
+    The content of an article's page, minus its heading, inside a <div> element.
 
     :param file: a Big Book XHTML file
     :return: the HTML as a string

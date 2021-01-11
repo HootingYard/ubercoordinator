@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <%!
 from formatting import sexagecimal, written_date, full_written_date
-from index import Story
+from index import Article
 %>
 <html lang="en-GB">
     <head>
-    <title>${story.title}</title>
+    <title>${article.title}</title>
     <meta name="author" content="Frank Key"/>
-    <meta name="date" content="${story.date}"/>
+    <meta name="date" content="${article.date}"/>
     <meta name="description" content="The indiscriminately collected works of Frank Key."/>
     <meta name="language" content="en-GB"/>
     <meta name="generator" content="ÜBERCOÖRDINATOR"/>
@@ -15,18 +15,18 @@ from index import Story
     <link href="../Styles/style.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-    <p class="date">${full_written_date(story.date)}</p>
+    <p class="date">${full_written_date(article.date)}</p>
     <p class="index"><a href="index.html">back to the index</a></p>
-    % if story.narrations:
+    % if article.narrations:
     <p class="audio"><a href="#audio">hear this
         <span class="symbol">&#xf028;</span>  <!-- speaker -->
     </a></p>
     % endif
     ${content}
-    % if story.narrations:
+    % if article.narrations:
     <div id="audio">
         <h2>Broadcasts</h2>
-        % for narration in story.narrations:
+        % for narration in article.narrations:
         <% show = narration.show %>
         <div class="player">
             <p>Hooting Yard on the Air,
