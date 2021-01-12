@@ -293,7 +293,7 @@ will be rejected.
     class="medium"     
     class="large"      
     class="full"       dominate the page
-    class="fullwidth"  span the full width of the typeblock
+    class="fullwidth"  span the full width of the type block
     src                must be in the ../Images directory
     alt                either a caption or the filename
 -->    
@@ -310,8 +310,8 @@ will be rejected.
 >
 
 <!--
-    class="contents"  
-    class="illustration"  
-    class="blockparagraphs"  
-    class="verse"  
+    class="contents"        a contents list in a contents page
+    class="illustration"    a illustration and its caption
+    class="blockparagraphs" a region where a block paragraph presentation looks better
+    class="verse"           a multi-stanza poem or song
 -->

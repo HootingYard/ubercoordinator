@@ -57,7 +57,12 @@
         <div>
             <dt>${full_written_date(date)}</dt>
             %for article in articles:
-            <dd>${article.link}</dd>
+            <dd>
+                ${article.link}
+                % if article.narrations:
+                    <span class="speaker">&#xf028;</span>
+                % endif
+            </dd>
             %endfor
         </div>
         % endfor

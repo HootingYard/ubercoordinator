@@ -5,14 +5,14 @@ from pathlib import Path
 from lxml.html import tostring, HtmlElement, HTMLParser
 from lxml.etree import parse
 
-__all__ = ['parse_xhtml', 'xhtml_string', 'content']
+__all__ = ['parse_file', 'xhtml_string', 'content']
 
 
 def xhtml_string(element: HtmlElement) -> str:
     return tostring(element, encoding='unicode')
 
 
-def parse_xhtml(file: Path) -> HtmlElement:
+def parse_file(file: Path) -> HtmlElement:
     """
     Parse an XHTML file into plain HTML,
     i.e. a tree of HTMLElements without namespace annotations.
@@ -43,7 +43,7 @@ def content(file: Path, heading: bool = False) -> str:
     :param heading: if False remove the page's first h1 element (i.e. the heading)
     :return: the HTML as a string
     """
-    html = parse_xhtml(file)
+    html = parse_file(file)
     body: HtmlElement = html.xpath('//body')[0]
     if not heading:
         h1: HtmlElement = body.xpath('//h1')[0]

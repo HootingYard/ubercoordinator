@@ -51,7 +51,7 @@ body {
 
 /* Audio --------------------------------------------------------------- */
 
-div#audio audio {
+div.audio audio {
     width: 100%;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
@@ -59,7 +59,7 @@ div#audio audio {
     border-radius: 0;
 }
 
-div#audio p {
+div.audio p {
     text-indent: 0;
     text-align: left;
 }
@@ -272,6 +272,12 @@ div.verse p {
 
 span.symbol {
     font-family: Icons, serif;
+}
+
+span.speaker {
+    font-family: Icons, serif;
+    font-size: 75%;
+    color: gray;
 }
 
 strong.footnote {

@@ -221,6 +221,7 @@
                 Internal link hrefs should be a simple XHTML filename.
             </sch:assert>
         </sch:rule>
+
         <sch:rule context="// xhtml:a [@class = 'internal-pdf']">
             <sch:assert test="regexp:test(@href, '\.\./Media/.+\.pdf')">
                 All internal-pdf links point to PDF files in the Media directory.
@@ -230,6 +231,12 @@
         <sch:rule context="// xhtml:a [@class = 'internal-audio']">
             <sch:assert test="regexp:test(@href, '\.\./Media/.+\.(wav|aif|mp3|mid)')">
                 All internal-audio links point to audio files in the Media directory.
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="// xhtml:a [@class = 'internal-audio']">
+            <sch:assert test="@title">
+                Internal audio links must have a title for the player to use.
             </sch:assert>
         </sch:rule>
 

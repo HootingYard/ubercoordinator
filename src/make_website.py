@@ -36,10 +36,11 @@ def main() -> None:
         for file in (template_dir() / dirname).glob('*'):
             copyfile(src=file, dst=WEBSITE_DIR / dirname / file.name)
 
-    for file in (BIGBOOK_DIR / 'Images').glob('*'):
-        dst = WEBSITE_DIR / 'Images' / file.name
-        if not dst.exists():
-            copyfile(src=file, dst=dst)
+    for dirname in ('Images', 'Media'):
+        for file in (BIGBOOK_DIR / dirname).glob('*'):
+            dst = WEBSITE_DIR / dirname / file.name
+            if not dst.exists():
+                copyfile(src=file, dst=dst)
 
     for file in (template_dir() / 'Text').glob('index*.html'):
         template = templates.get_template(file.name)

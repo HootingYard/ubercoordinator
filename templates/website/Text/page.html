@@ -2,6 +2,7 @@
 <%!
 from formatting import sexagecimal, written_date, full_written_date
 from index import Article
+from lxml.html import fromstring as html_fromstring
 %>
 <html lang="en-GB">
     <head>
@@ -23,8 +24,24 @@ from index import Article
     </a></p>
     % endif
     ${content}
+
+    % if '"internal-audio"' in content:
+    <div class="audio">
+        <h2>Sounds</h2>
+        <% html = html_fromstring('<div>' + content + '</div>') %>
+        % for a in html.xpath('//a[@class="internal-audio"]'):
+        <div class="player">
+            <p>${a.attrib['title']}</p>
+            <audio controls src="${a.attrib['href']}">
+                <p>Download: <a href="${a.attrib['href']}">${a.attrib['href']}</a></p>
+            </audio>
+        </div>
+        % endfor
+    </div>
+    % endif
+
     % if article.narrations:
-    <div id="audio">
+    <div class="audio" id="audio">
         <h2>Broadcasts</h2>
         % for narration in article.narrations:
         <% show = narration.show %>

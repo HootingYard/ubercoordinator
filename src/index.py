@@ -13,7 +13,7 @@ from yaml import safe_load as yaml_load
 from lxml.html import HtmlElement, tostring as html_tostring
 
 from functions import dictionary_order_sorting_key
-from xhtml import parse_xhtml
+from xhtml import parse_file
 
 
 __all__ = ['Narration', 'Article', 'Show', 'Index', 'first_letter', 'year_month']
@@ -143,12 +143,10 @@ class Index:
     def _read_articles(self, keyml_repo: Path) -> None:
         text_dir = keyml_repo / 'books/bigbook/Text'
         toc_file = text_dir / 'toc.xhtml'
-        html = parse_xhtml(toc_file)
-        print(html_tostring(html))
+        html = parse_file(toc_file)
         for a in html.xpath("//div[@class='contents']//a"):  # type: HtmlElement
             article = Article(a, text_dir)
             self.articles[article.id] = article
-            print(repr(article.id))
 
     def _read_shows(self, analysis: Path) -> None:
         export = analysis / 'index/export/export.yaml'

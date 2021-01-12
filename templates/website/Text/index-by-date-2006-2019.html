@@ -46,7 +46,11 @@
     <h2>${month_and_year(date)}</h2>
 
         % for article in months_articles:
-        <p>${article.link}<em>— ${brief_date(article.date)}</em></p>
+        <p>${article.link}
+            % if article.narrations:
+                <span class="speaker">&#xf028;</span>  <!-- speaker -->
+            % endif
+            <em>— ${brief_date(article.date)}</em></p>
         % endfor
 </div>
 % endfor
