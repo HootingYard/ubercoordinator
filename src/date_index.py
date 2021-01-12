@@ -1,42 +1,66 @@
 """ Functions to arrange article entries for the indexes-by-date templates.
 """
 
-__all__ = ['split_blogs', 'arrange_first_blog', 'month_id']
+__all__ = [
+    'from_web_page',
+    'from_first_blog',
+    'from_second_blog',
+    'arrange_first_blog',
+    'month_id',
+    'day_id',
+    'date_back_link',
+    'title_back_link',
+]
 
 from datetime import datetime
 from itertools import groupby
 from typing import List, NamedTuple
 
 from functions import sift
-from index import Article, Index, year_month
+from index import Article, year_month
 from xhtml import content
 
 
-def split_blogs(index: Index) -> List[List[Article]]:
+website_cutoff_date = datetime(2003, 1, 1)
+first_blog_cutoff_date = datetime(2006, 12, 31)
+
+
+def from_web_page(article: Article) -> bool:
     """
-    Splits index.articles into three lists, one for each
-    blog Frank ran. 2003-01-01 and earlier were in the NDDirect website or
-    published in pamphlets, 2003-12-01 to 2006-12-31 were the first BTOpenWorld
-    blog, 2007-01-01 and later were in the second hootingyard.org blog.
-
-    :param index: the article and show index
-    :return: a list of three lists, one for each blog's list of Stories
+    True if this article belonged in the 'Hooting Yard Web Page' site.
+    2003-01-01 and earlier were in the NDDirect website or
+    published in pamphlets.
     """
+    return article.date <= website_cutoff_date
 
-    blogs = [[], [], []]
 
-    website_cutoff_date = datetime(2003, 1, 1)
-    first_blog_cutoff_date = datetime(2006, 12, 31)
+def from_first_blog(article: Article) -> bool:
+    """
+    True if this article belonged in the first blog, the 'Hooting Yard Blog'.
+    2003-12-01 to 2006-12-31 were the first BTOpenWorld blog.
+    """
+    return website_cutoff_date < article.date <= first_blog_cutoff_date
 
-    for article in index.articles.values():
-        if article.date <= website_cutoff_date:
-            blogs[0].append(article)
-        elif article.date <= first_blog_cutoff_date:
-            blogs[1].append(article)
-        else:
-            blogs[2].append(article)
 
-    return blogs
+def from_second_blog(article: Article) -> bool:
+    """
+    True if this article belonged in the second blog, 'Hooting Yard'.
+    2007-01-01 and later were in the second hootingyard.org blog.
+    """
+    return article.date < first_blog_cutoff_date
+
+
+def date_back_link(article: Article) -> str:
+    if from_web_page(article):
+        return 'index-by-date-1992-2003.html#' + day_id(article.date)
+    elif from_first_blog(article):
+        return 'index-by-date-2003-2006.html#' + day_id(article.date)
+    else:
+        return 'index-by-date-2006-2019.html#' + day_id(article.date)
+
+
+def title_back_link(article: Article) -> str:
+    return 'index-by-title.html#' + day_id(article.date)
 
 
 def is_intro(article: Article) -> bool:
@@ -78,5 +102,9 @@ def arrange_first_blog(articles: List[Article]) -> List[Month]:
     return months
 
 
-def month_id(date: datetime):
+def month_id(date: datetime) -> str:
     return date.strftime('month-%Y-%m')
+
+
+def day_id(date: datetime) -> str:
+    return date.strftime('day-%Y-%m-%d')

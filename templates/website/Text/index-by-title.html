@@ -3,6 +3,7 @@
 <%!
 from formatting import brief_date
 from index import first_letter
+from date_index import day_id
 from itertools import groupby
 %>
 <html lang="en-GB">
@@ -59,8 +60,10 @@ from itertools import groupby
             <div id="${letter}">
                 <h2>${letter} is for…</h2>
                 % for article in articles:
-                <p>${article.link}
-                <em>— ${brief_date(article.date)}</em></p>
+                <p id="${day_id(article.date)}">
+                    ${article.link}
+                    <em>— ${brief_date(article.date)}</em>
+                </p>
                 % endfor
             </div>
         % endfor

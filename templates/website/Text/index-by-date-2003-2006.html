@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <%!
     from formatting import full_written_date, month_and_year
-    from date_index import split_blogs, arrange_first_blog, month_id
+    from date_index import from_first_blog, arrange_first_blog, month_id, day_id
 %>
 <%
     # index: Index
-    first_blog_articles = split_blogs(index)[1]
+    first_blog_articles = filter(from_first_blog, index.articles.values())
     first_blog = arrange_first_blog(first_blog_articles)
 %>
 <html lang="en-GB">
@@ -51,23 +51,21 @@
 
     ${introduction}
 
-    % for date, articles in days:
     <dl class="day">
         % for date, articles in days:
         <div>
             <dt>${full_written_date(date)}</dt>
             %for article in articles:
-            <dd>
+            <dd id="${day_id(article.date)}">
                 ${article.link}
                 % if article.narrations:
-                    <span class="speaker">&#xf028;</span>
+                <span class="speaker">&#xf028;</span>
                 % endif
             </dd>
             %endfor
         </div>
         % endfor
     </dl>
-    % endfor
 </div>
 % endfor
 

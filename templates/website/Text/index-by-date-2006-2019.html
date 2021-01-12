@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <%!
     from formatting import month_and_year, brief_date
-    from date_index import split_blogs, month_id
+    from date_index import from_second_blog, month_id, day_id
     from itertools import groupby
     from datetime import datetime
     from index import year_month
 %>
 <%
     # index: Index
-    second_blog_articles = split_blogs(index)[2]
+    second_blog_articles = filter(from_second_blog, index.articles.values())
 %>
 <html lang="en-GB">
 <head>
@@ -46,9 +46,10 @@
     <h2>${month_and_year(date)}</h2>
 
         % for article in months_articles:
-        <p>${article.link}
+        <p id="${day_id(article.date)}">
+            ${article.link}
             % if article.narrations:
-                <span class="speaker">&#xf028;</span>  <!-- speaker -->
+            <span class="speaker">&#xf028;</span>
             % endif
             <em>— ${brief_date(article.date)}</em></p>
         % endfor

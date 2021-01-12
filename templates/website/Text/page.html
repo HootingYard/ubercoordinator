@@ -2,6 +2,7 @@
 <%!
 from formatting import sexagecimal, written_date, full_written_date
 from index import Article
+from date_index import date_back_link, title_back_link
 from lxml.html import fromstring as html_fromstring
 %>
 <html lang="en-GB">
@@ -17,7 +18,13 @@ from lxml.html import fromstring as html_fromstring
 </head>
 <body>
     <p class="date">${full_written_date(article.date)}</p>
-    <p class="index"><a href="index.html">back to the index</a></p>
+
+    <p class="index">
+        back to:
+        <a href="${title_back_link(article)}">title</a>,
+        <a href="${date_back_link(article)}">date</a> or
+        <a href="index.html">indexes</a>
+    </p>
     % if article.narrations:
     <p class="audio"><a href="#audio">hear this
         <span class="symbol">&#xf028;</span>  <!-- speaker -->

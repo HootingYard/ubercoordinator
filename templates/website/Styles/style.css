@@ -42,11 +42,15 @@
     src: url('../Fonts/fontawesome-webfont.ttf') format('truetype');
 }
 
+/* Body ---------------------------------------------------------------- */
+
 body {
     font-family: 'Libertine', serif;
     font-size: 120%; /* Libertine seems a little small */
-    margin-left: 20%;
-    margin-right: 25%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    max-width: 18cm;  /* this looks right on my screen, at least... */
+    margin: 0 auto;
 }
 
 /* Audio --------------------------------------------------------------- */
@@ -56,7 +60,6 @@ div.audio audio {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     display: block;
-    border-radius: 0;
 }
 
 div.audio p {
@@ -67,7 +70,7 @@ div.audio p {
 /* Headings ------------------------------------------------------------- */
 
 h1 {
-    font-size: 180%;
+    font-size: 160%;
     font-weight: normal;
     font-family: 'Opera', serif;
     text-transform: uppercase;
@@ -83,7 +86,7 @@ h1.center {
 }
 
 h2 {
-    font-size: 140%;
+    font-size: 130%;
     font-weight: normal;
     font-family: 'Opera', serif;
     text-transform: uppercase;
@@ -210,11 +213,19 @@ p.invisible {
     display: none;
 }
 
-/* list need extra vertical spacing to not look cramped  */
+/* list needs extra vertical spacing to not look cramped  */
 li {
     line-height: 1.5em;
     text-align: left;
 }
+
+/* I'm using <div> to group <dt> and <dd> elements,
+   give those a bit the space at the bottom */
+
+dl div {
+    margin-bottom: 0.5em;
+}
+
 
 /* Do not indent first lines of paragraphs where there is white space above */
 hr + p,
