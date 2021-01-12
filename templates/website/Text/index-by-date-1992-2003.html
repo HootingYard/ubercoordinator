@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%! from date_index import from_web_page, day_id %>
+<%! from date_index import from_web_page %>
 <html lang="en-GB">
 <head>
     <title>Hooting Yard, Index by Date, 1992-2003</title>
@@ -22,7 +22,7 @@
 
     <div class="contents">
         % for article in filter(from_web_page, index.articles.values()):
-        <p id="${day_id(article.date)}">
+        <p id="${article.id}">
             ${article.link}
             % if article.narrations:
             <span class="speaker">&#xf028;</span>

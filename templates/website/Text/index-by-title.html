@@ -3,7 +3,6 @@
 <%!
 from formatting import brief_date
 from index import first_letter
-from date_index import day_id
 from itertools import groupby
 %>
 <html lang="en-GB">
@@ -60,8 +59,11 @@ from itertools import groupby
             <div id="${letter}">
                 <h2>${letter} is for…</h2>
                 % for article in articles:
-                <p id="${day_id(article.date)}">
+                <p id="${article.id}">
                     ${article.link}
+                    % if article.narrations:
+                    <span class="speaker">&#xf028;</span>
+                    % endif
                     <em>— ${brief_date(article.date)}</em>
                 </p>
                 % endfor

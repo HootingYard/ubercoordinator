@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <%!
     from formatting import month_and_year, brief_date
-    from date_index import from_second_blog, month_id, day_id
+    from date_index import from_second_blog, month_id
     from itertools import groupby
     from datetime import datetime
     from index import year_month
@@ -46,7 +46,7 @@
     <h2>${month_and_year(date)}</h2>
 
         % for article in months_articles:
-        <p id="${day_id(article.date)}">
+        <p id="${article.id}">
             ${article.link}
             % if article.narrations:
             <span class="speaker">&#xf028;</span>

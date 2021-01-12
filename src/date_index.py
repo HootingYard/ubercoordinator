@@ -7,7 +7,6 @@ __all__ = [
     'from_second_blog',
     'arrange_first_blog',
     'month_id',
-    'day_id',
     'date_back_link',
     'title_back_link',
 ]
@@ -52,15 +51,15 @@ def from_second_blog(article: Article) -> bool:
 
 def date_back_link(article: Article) -> str:
     if from_web_page(article):
-        return 'index-by-date-1992-2003.html#' + day_id(article.date)
+        return 'index-by-date-1992-2003.html#' + article.id
     elif from_first_blog(article):
-        return 'index-by-date-2003-2006.html#' + day_id(article.date)
+        return 'index-by-date-2003-2006.html#' + article.id
     else:
-        return 'index-by-date-2006-2019.html#' + day_id(article.date)
+        return 'index-by-date-2006-2019.html#' + article.id
 
 
 def title_back_link(article: Article) -> str:
-    return 'index-by-title.html#' + day_id(article.date)
+    return 'index-by-title.html#' + article.id
 
 
 def is_intro(article: Article) -> bool:
@@ -104,7 +103,3 @@ def arrange_first_blog(articles: List[Article]) -> List[Month]:
 
 def month_id(date: datetime) -> str:
     return date.strftime('month-%Y-%m')
-
-
-def day_id(date: datetime) -> str:
-    return date.strftime('day-%Y-%m-%d')
