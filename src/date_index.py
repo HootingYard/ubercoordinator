@@ -47,7 +47,7 @@ def from_second_blog(article: Article) -> bool:
     True if this article belonged in the second blog, 'Hooting Yard'.
     2007-01-01 and later were in the second hootingyard.org blog.
     """
-    return article.date < first_blog_cutoff_date
+    return article.date > first_blog_cutoff_date
 
 
 def date_back_link(article: Article) -> str:
