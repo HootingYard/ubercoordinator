@@ -159,11 +159,23 @@ p.breakabove, p.footnote {
     margin-top: 0.5em;
 }
 
-p.source, p.editor {
+p.editor {
     text-indent: 0;
     margin-top: 0.5em;
     font-style: italic;
 }
+
+p.introduction {
+    text-indent: 0;
+    margin-bottom: 0.5em;
+    font-style: italic;
+}
+
+p.detour {
+    text-indent: 0;
+    margin-top: 0.5em;
+}
+
 
 p.postwebpage {
     text-indent: 0;
@@ -237,6 +249,7 @@ div.illustration + p,
 div.verse + p,
 div.contents + p,
 p.byline + p,
+p.introduction + p,
 blockquote + p,
 blockquote > p:first-of-type {
     text-indent: 0;

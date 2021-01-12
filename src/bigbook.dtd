@@ -190,7 +190,8 @@ will be rejected.
 <!ELEMENT p ( %INLINE; )* >
 
 <!ATTLIST p class ( verse | textbreak | imagerow | caption |byline |
-                    footnote | editor | centered | source | lines | invisible ) #IMPLIED>
+                    footnote | editor | centered | source | lines | invisible |
+                    introduction | detour ) #IMPLIED>
 
 <!--
     class="verse"      a stanza of verse containing br linkbreaks
@@ -201,8 +202,10 @@ will be rejected.
     class="footnote"   a footnote
     class="editor"     an editor's footnote
     class="centered"   centered paragraphs      
-    class="lines"      text seperated into lines by <br/>, but not verse      
+    class="lines"      text separated into lines by <br/>, but not verse
     class="invisible"  paragraph that cannot be seen
+    class="introduction" introduction to a story
+    class="detour"       a footer containing links to other sites
 -->
 
 
