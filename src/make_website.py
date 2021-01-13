@@ -9,8 +9,8 @@ from index import Index
 
 
 REPO_DIR = Path('~/Projects/HootingYard/').expanduser()
-WEBSITE_DIR = Path('~/Projects/HootingYard.github.io/').expanduser()
 BIGBOOK_DIR = REPO_DIR / 'keyml/books/bigbook'
+WEBSITE_DIR = Path('~/Projects/HootingYard.github.io/').expanduser()
 
 
 def template_dir() -> Path:
@@ -52,7 +52,7 @@ def main() -> None:
         html_file = WEBSITE_DIR / 'Text' / file.name
         html_file.write_text(template.render(index=index))
 
-    for article in index.articles.values():
+    for article in index.get_articles():
         # content = xhtml.content(article.file, heading=True)
         # I'm going to be a barbarian instead and use a regex on HTML.
         # It's acceptably accurate on these Big Book files, and much faster.

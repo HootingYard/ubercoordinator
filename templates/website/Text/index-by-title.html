@@ -2,8 +2,6 @@
 <!--suppress HtmlUnknownAnchorTarget -->
 <%!
 from formatting import brief_date
-from index import first_letter
-from itertools import groupby
 %>
 <html lang="en-GB">
 <head>
@@ -55,7 +53,7 @@ from itertools import groupby
             <a href="#Z">Z</a>
         </h2>
 
-        % for letter, articles in groupby(sorted(index.articles.values()), first_letter):
+        % for letter, articles in index.get_articles_by_letter():
             <div id="${letter}">
                 <h2>${letter} is for…</h2>
                 % for article in articles:

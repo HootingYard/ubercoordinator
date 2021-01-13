@@ -4,19 +4,20 @@ This data comes from the 'bigbook/Text/toc.xhtml' file in the HootingYard 'keyml
 repository and the 'export.yaml' file in the 'archive_management' repository.
 """
 
+__all__ = ['Narration', 'Article', 'Show', 'Index']
+
+
 from dataclasses import dataclass
-from typing import Dict, List, Any, Tuple
+from itertools import groupby
+from typing import Dict, List, Any, Tuple, Iterator
 from pathlib import Path
 from datetime import datetime
 
 from yaml import safe_load as yaml_load
 from lxml.html import HtmlElement, tostring as html_tostring
 
-from functions import dictionary_order_sorting_key
-from xhtml import parse_file
-
-
-__all__ = ['Narration', 'Article', 'Show', 'Index', 'first_letter', 'year_month']
+from functions import (dictionary_order_sorting_key, sift,
+                       parse_xhtml_file, read_html_content)
 
 
 class Article:
@@ -56,6 +57,26 @@ class Article:
 
     def __lt__(self, other: 'Article') -> bool:  # sorts by title
         return self.sorting_key < other.sorting_key
+
+    @property
+    def blog(self) -> int:
+        """
+        Which version Frank Key's blog this article came from.
+        Version 0 is the old Hooting Yard Home Page.
+        """
+        if self.date > datetime(2006, 12, 24):
+            return 2
+        elif datetime(2003, 1, 1) < self.date <= datetime(2006, 12, 24):
+            return 1
+        else:
+            return 0
+
+    @property
+    def first_letter(self) -> str:
+        """
+        The first letter of the title, alphabetically. A to Z
+        """
+        return self.sorting_key[0].upper()
 
 
 @dataclass
@@ -136,14 +157,54 @@ class Index:
         self._read_articles(keyml_repo)
         self._read_shows(analysis_repo)
 
-    @property
-    def sorted_articles(self) -> List[str]:
-        return sorted(self.articles)
+    def get_articles(self, blog: int = -1) -> Iterator[Article]:
+        if blog == -1:
+            yield from self.articles.values()
+        else:
+            yield from filter(lambda a: a.blog, self.articles.values())
+
+    def get_articles_by_letter(self) -> Iterator[Tuple[str, List[Article]]]:
+        yield from groupby(sorted(self.get_articles()), lambda a: a.first_letter)
+
+    def get_articles_by_year(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
+        yield from groupby(sorted(self.get_articles(blog)), lambda a: a.date.year)
+
+    def get_articles_by_year_month(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
+        for (y, m), g in groupby(sorted(self.get_articles(blog)),
+                                 lambda a: (a.date.year, a.date.month)):
+            yield y, m, g
+
+    def get_first_blog(self) \
+            -> Iterator[Tuple[datetime,
+                              str,
+                              List[Tuple[datetime,
+                                         List[Article]]]]]:
+        """
+        Split the first blog's articles into groups of months
+        containing groups of days.
+        The first blog has an introduction to each month, remove that
+        and extract its HTML text for use in the index.
+        Most days' entries started with a quote of the day,
+        move those to the starts of the days' entries.
+        """
+        def is_intro(article: Article) -> bool:
+            return article.title.startswith('Hooting Yard Archive, ')
+
+        for (year, month), months_articles in groupby(self.get_articles(1),
+                                                      lambda a: (a.date.year, a.date.month)):
+            intro, months_articles = sift(months_articles, is_intro)
+            intro = read_html_content(intro[0].file) if intro else ''
+            days = []
+            for date, days_articles in groupby(months_articles, lambda a: a.date):
+                quotes, rest = sift(days_articles, lambda st: st.title.startswith('“'))
+                days_articles = quotes + rest
+                days.append((date, days_articles))
+            yield datetime(year, month, 1), intro, days
 
     def _read_articles(self, keyml_repo: Path) -> None:
         text_dir = keyml_repo / 'books/bigbook/Text'
         toc_file = text_dir / 'toc.xhtml'
-        html = parse_file(toc_file)
+        html = parse_xhtml_file(toc_file)
         for a in html.xpath("//div[@class='contents']//a"):  # type: HtmlElement
             article = Article(a, text_dir)
             self.articles[article.id] = article
@@ -163,15 +224,3 @@ class Index:
                     article.narrations.append(narration)
                     show.narrations.append(narration)
             show.narrations.sort()
-
-
-def first_letter(article: Article) -> str:
-    """ The first letter of an article's title.
-
-    :return: a capital letter
-    """
-    return article.sorting_key[0].upper()
-
-
-def year_month(article: Article) -> Tuple[int, int]:
-    return article.date.year, article.date.month

@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <%!
-    from formatting import month_and_year, brief_date
-    from date_index import from_second_blog, month_id
+    from formatting import month_and_year, brief_date, month_id
     from itertools import groupby
     from datetime import datetime
-    from index import year_month
-%>
-<%
-    # index: Index
-    second_blog_articles = list(filter(from_second_blog, index.articles.values()))
 %>
 <html lang="en-GB">
 <head>
@@ -29,10 +23,10 @@
 <h1>Hooting Yard, A Website by Frank Key, 2006–2019</h1>
 
 <div class="contents">
-    % for year, articles in groupby(second_blog_articles, lambda s: s.date.year):
+    % for year, articles in index.get_articles_by_year(2):
     <p>
         <strong>${year}</strong>
-        % for month, _ in groupby(articles, lambda s: s.date.month):
+        % for month, _ in groupby(articles, lambda a: a.date.month):
         <% date = datetime(year, month, 1) %>
         <a href="#${month_id(date)}">${date.strftime('%b')}</a>
         % endfor
@@ -40,7 +34,7 @@
     % endfor
 </div>
 
-% for (year, month), months_articles in groupby(second_blog_articles, year_month):
+% for year, month, months_articles in index.get_articles_by_year_month(2):
 <% date = datetime(year, month, 1) %>
 <div id="${month_id(date)}" class="contents">
     <h2>${month_and_year(date)}</h2>

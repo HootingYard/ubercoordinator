@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <%!
 from formatting import sexagecimal, written_date, full_written_date
-from index import Article
-from date_index import date_back_link, title_back_link
 from lxml.html import fromstring as html_fromstring
+
+def date_back_link(article):
+    years = ('1992-2003', '2003-2006', '2006-2019')[article.blog]
+    return f'index-by-date-{years}.html#{article.id}'
+
+def title_back_link(article):
+    return 'index-by-title.html' + article.id
 %>
 <html lang="en-GB">
     <head>
