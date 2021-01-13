@@ -20,7 +20,7 @@ def parse_file(file: Path) -> HtmlElement:
     :param file: XHTML file
     :return: the 'html' element
     """
-    # xhtml_parser = XHTMLParser(dtd_validation=True, ns_clean=True)
+    # xhtml_parser = XHTMLParser(dtd_validation=True, ns_clean=True, remove_comments=True)
     xhtml_parser = HTMLParser()
     html: HtmlElement = parse(str(file), parser=xhtml_parser).getroot()
     # remove_namespaces(html)

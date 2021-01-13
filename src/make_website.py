@@ -9,7 +9,7 @@ from index import Index
 
 
 REPO_DIR = Path('~/Projects/HootingYard/').expanduser()
-WEBSITE_DIR = Path('~/Documents/HootingYard/').expanduser()
+WEBSITE_DIR = Path('~/Projects/HootingYard.github.io/').expanduser()
 BIGBOOK_DIR = REPO_DIR / 'keyml/books/bigbook'
 
 
@@ -26,7 +26,7 @@ def template_dir() -> Path:
 def main() -> None:
     index = Index(keyml_repo=REPO_DIR/'keyml', analysis_repo=REPO_DIR/'analysis')
 
-    templates = TemplateLookup([template_dir() / 'Text'],
+    templates = TemplateLookup([template_dir(), template_dir() / 'Text'],
                                strict_undefined=True)
 
     for dirname in ('Text', 'Images', 'Media', 'Fonts', 'Styles'):
@@ -42,7 +42,12 @@ def main() -> None:
             if not dst.exists():
                 copyfile(src=file, dst=dst)
 
-    for file in (template_dir() / 'Text').glob('index*.html'):
+    file = template_dir() / 'index.html'
+    template = templates.get_template(file.name)
+    html_file = WEBSITE_DIR / file.name
+    html_file.write_text(template.render(index=index))
+
+    for file in (template_dir() / 'Text').glob('index-*.html'):
         template = templates.get_template(file.name)
         html_file = WEBSITE_DIR / 'Text' / file.name
         html_file.write_text(template.render(index=index))
