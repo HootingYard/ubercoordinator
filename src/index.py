@@ -64,9 +64,9 @@ class Article:
         Which version Frank Key's blog this article came from.
         Version 0 is the old Hooting Yard Home Page.
         """
-        if self.date > datetime(2006, 12, 24):
+        if self.date > datetime(2006, 12, 31):
             return 2
-        elif datetime(2003, 1, 1) < self.date <= datetime(2006, 12, 24):
+        elif datetime(2003, 1, 1) < self.date <= datetime(2006, 12, 31):
             return 1
         else:
             return 0
@@ -161,19 +161,19 @@ class Index:
         if blog == -1:
             yield from self.articles.values()
         else:
-            yield from filter(lambda a: a.blog, self.articles.values())
+            yield from filter(lambda a: a.blog == blog, self.articles.values())
 
     def get_articles_by_letter(self) -> Iterator[Tuple[str, List[Article]]]:
         yield from groupby(sorted(self.get_articles()), lambda a: a.first_letter)
 
     def get_articles_by_year(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
         def year(a): return a.date.year
-        year_sorted = sorted(self.get_articles(), key=year)
+        year_sorted = sorted(self.get_articles(blog), key=year)
         yield from groupby(year_sorted, key=year)
 
     def get_articles_by_year_month(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
         def year_month(a): return a.date.year, a.date.month
-        year_month_sorted = sorted(self.get_articles(), key=year_month)
+        year_month_sorted = sorted(self.get_articles(blog), key=year_month)
         for (y, m), g in groupby(year_month_sorted, key=year_month):
             yield y, m, g
 
