@@ -1,57 +1,46 @@
 import re
-from inspect import getsourcefile
-from pathlib import Path
 from shutil import copyfile
-
 from mako.lookup import TemplateLookup
 
+from settings import BIGBOOK_DIR, WEBSITE_DIR, WEB_TEMPLATE_DIR, SHOW_INDEX_FILE
 from index import Index
 
 
-REPO_DIR = Path('~/Projects/HootingYard/').expanduser()
-BIGBOOK_DIR = REPO_DIR / 'keyml/books/bigbook'
-WEBSITE_DIR = Path('~/Projects/HootingYard.github.io/').expanduser()
-
-
-def template_dir() -> Path:
-    """
-    :return: the directory of website files and templates
-    """
-    src_dir = Path(getsourcefile(lambda _: None))  # i.e. this module's directory
-    ubercoordinator_dir = src_dir.parent.parent
-    assert ubercoordinator_dir.name == 'ubercoordinator'
-    return ubercoordinator_dir / 'templates' / 'website'
-
-
 def main() -> None:
-    index = Index(keyml_repo=REPO_DIR/'keyml', analysis_repo=REPO_DIR/'analysis')
+    index = Index(BIGBOOK_DIR, SHOW_INDEX_FILE)
 
-    templates = TemplateLookup([template_dir(), template_dir() / 'Text'],
+    templates = TemplateLookup([WEB_TEMPLATE_DIR, WEB_TEMPLATE_DIR / 'Text'],
                                strict_undefined=True)
 
+    # Create website directories, if necessary.
     for dirname in ('Text', 'Images', 'Media', 'Fonts', 'Styles'):
         (WEBSITE_DIR / dirname).mkdir(exist_ok=True, parents=True)
 
+    # Copy in the styling files from the web template.
     for dirname in ('Fonts', 'Styles', 'Images'):
-        for file in (template_dir() / dirname).glob('*'):
+        for file in (WEB_TEMPLATE_DIR / dirname).glob('*'):
             copyfile(src=file, dst=WEBSITE_DIR / dirname / file.name)
 
+    # Copy in the Big Book's media files, if necessary.
     for dirname in ('Images', 'Media'):
         for file in (BIGBOOK_DIR / dirname).glob('*'):
             dst = WEBSITE_DIR / dirname / file.name
             if not dst.exists():
                 copyfile(src=file, dst=dst)
 
-    file = template_dir() / 'index.html'
+    # Expand the 'index.html' file template.
+    file = WEB_TEMPLATE_DIR / 'index.html'
     template = templates.get_template(file.name)
     html_file = WEBSITE_DIR / file.name
     html_file.write_text(template.render(index=index))
 
-    for file in (template_dir() / 'Text').glob('index-*.html'):
+    # Expand the index pages' templates.
+    for file in (WEB_TEMPLATE_DIR / 'Text').glob('index-*.html'):
         template = templates.get_template(file.name)
         html_file = WEBSITE_DIR / 'Text' / file.name
         html_file.write_text(template.render(index=index))
 
+    # Expand the pages for the Big Book, using the page.html template.
     for article in index.get_articles():
         # content = xhtml.content(article.file, heading=True)
         # I'm going to be a barbarian instead and use a regex on HTML.

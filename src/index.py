@@ -151,11 +151,11 @@ class Index:
 
     shows: Dict[str, Show]  # key is show_id
 
-    def __init__(self, keyml_repo: Path, analysis_repo: Path) -> None:
+    def __init__(self, bigbook_dir: Path, show_index_file: Path) -> None:
         self.shows = {}
         self.articles = {}
-        self._read_articles(keyml_repo)
-        self._read_shows(analysis_repo)
+        self._read_articles(bigbook_dir)
+        self._read_shows(show_index_file)
 
     def get_articles(self, blog: int = -1) -> Iterator[Article]:
         if blog == -1:
@@ -183,8 +183,7 @@ class Index:
                               List[Tuple[datetime,
                                          List[Article]]]]]:
         """
-        Split the first blog's articles into groups of months
-        containing groups of days.
+        Split the first blog's articles into groups of months containing groups of days.
         The first blog has an introduction to each month, remove that
         and extract its HTML text for use in the index.
         Most days' entries started with a quote of the day,
@@ -204,17 +203,16 @@ class Index:
                 days.append((date, days_articles))
             yield datetime(year, month, 1), intro, days
 
-    def _read_articles(self, keyml_repo: Path) -> None:
-        text_dir = keyml_repo / 'books/bigbook/Text'
+    def _read_articles(self, bigbook_dir: Path) -> None:
+        text_dir = bigbook_dir / 'Text'
         toc_file = text_dir / 'toc.xhtml'
         html = parse_xhtml_file(toc_file)
         for a in html.xpath("//div[@class='contents']//a"):  # type: HtmlElement
             article = Article(a, text_dir)
             self.articles[article.id] = article
 
-    def _read_shows(self, analysis: Path) -> None:
-        export = analysis / 'index/export/export.yaml'
-        for show_dict in yaml_load(export.open())['shows']:
+    def _read_shows(self, show_index_file: Path) -> None:
+        for show_dict in yaml_load(show_index_file.open())['shows']:
             show = Show(**show_dict)
             self.shows[show.id] = show
             show.narrations = []
