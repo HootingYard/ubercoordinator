@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <%!
-from formatting import sexagecimal, written_date, full_written_date
+from dates import minute_second, written_date, full_written_date
 from lxml.html import fromstring as html_fromstring
 
 def date_back_link(article):
@@ -60,7 +60,7 @@ def title_back_link(article):
         <div class="player">
             <p>Hooting Yard on the Air,
                 <a href="${show.internet_archive_url}" title="View on the Internet Archive">${written_date(show.date)}</a>&nbsp;:
-                “${show.title}” (starts&nbsp;around&nbsp;${sexagecimal(narration.start_time)})
+                “${show.title}” (starts&nbsp;around&nbsp;${minute_second(narration.start_time)})
             </p>
             <audio controls src="${show.mp3_url}">
                 <p>Download: <a href="${show.mp3_url}">${show.mp3_url}</a></p>

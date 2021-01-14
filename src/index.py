@@ -16,8 +16,8 @@ from datetime import datetime
 from yaml import safe_load as yaml_load
 from lxml.html import HtmlElement, tostring as html_tostring
 
-from functions import (dictionary_order_sorting_key, sift,
-                       parse_xhtml_file, read_html_content)
+from functions import (dictionary_order_sorting_key, sift)
+from files import parse_xhtml_file, read_html_content
 
 
 class Article:
@@ -167,11 +167,14 @@ class Index:
         yield from groupby(sorted(self.get_articles()), lambda a: a.first_letter)
 
     def get_articles_by_year(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
-        yield from groupby(sorted(self.get_articles(blog)), lambda a: a.date.year)
+        def year(a): return a.date.year
+        year_sorted = sorted(self.get_articles(), key=year)
+        yield from groupby(year_sorted, key=year)
 
     def get_articles_by_year_month(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
-        for (y, m), g in groupby(sorted(self.get_articles(blog)),
-                                 lambda a: (a.date.year, a.date.month)):
+        def year_month(a): return a.date.year, a.date.month
+        year_month_sorted = sorted(self.get_articles(), key=year_month)
+        for (y, m), g in groupby(year_month_sorted, key=year_month):
             yield y, m, g
 
     def get_first_blog(self) \
