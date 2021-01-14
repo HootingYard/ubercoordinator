@@ -13,10 +13,9 @@ __all__ = [
     "WEB_TEMPLATE_DIR",
 ]
 
+from inspect import getsourcefile
 from os import environ
 from pathlib import Path
-from inspect import getsourcefile
-
 
 _DEFAULT_REPO_DIR = Path("~/Projects/HootingYard/").expanduser()
 """Where Glyn keeps things on his own computer."""
@@ -39,14 +38,11 @@ def _get_ubercoordinator_dir() -> Path:
 BIGBOOK_DIR = _get_directory("BIG_BOOK_DIR", "keyml/books/bigbook")
 """The Big Book of Key's base directory in the 'keyml' repository."""
 
-
 SHOW_INDEX_FILE = _get_directory("SHOW_INDEX_FILE", "analysis/index/export/export.yaml")
 """The 'export.yaml' file for the show index, from the 'analysis' repository."""
 
-
 WEBSITE_DIR = _get_directory("WEBSITE_DIR", "HootingYard.github.io")
 """The output directoryy for the website, in the 'HootingYard.github.io' repository."""
-
 
 WEB_TEMPLATE_DIR = _get_ubercoordinator_dir() / "templates" / "website"
 """The directory of webpage template files."""

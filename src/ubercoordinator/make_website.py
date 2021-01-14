@@ -1,9 +1,10 @@
 import re
 from shutil import copyfile
+
 from mako.lookup import TemplateLookup
 
-from settings import BIGBOOK_DIR, WEBSITE_DIR, WEB_TEMPLATE_DIR, SHOW_INDEX_FILE
 from index import Index
+from settings import BIGBOOK_DIR, WEBSITE_DIR, WEB_TEMPLATE_DIR, SHOW_INDEX_FILE
 
 
 def main() -> None:

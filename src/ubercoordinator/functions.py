@@ -6,6 +6,7 @@ __all__ = ["sift", "dictionary_order_sorting_key"]
 
 import re
 from typing import List, TypeVar, Tuple, Callable, Iterable
+
 from num2words import num2words
 from unidecode import unidecode
 
@@ -13,7 +14,7 @@ A = TypeVar("A")
 
 
 def sift(
-    sequence: Iterable[A], condition: Callable[[A], bool]
+        sequence: Iterable[A], condition: Callable[[A], bool]
 ) -> Tuple[List[A], List[A]]:
     """
     Sift an iterable into two lists: one for elements that match a condition

@@ -4,6 +4,7 @@ __all__ = [
 ]
 
 from pathlib import Path
+
 from lxml.etree import parse
 from lxml.html import HtmlElement, HTMLParser, tostring
 

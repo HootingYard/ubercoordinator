@@ -15,27 +15,24 @@ Optionally all linked image files can be checked for validity.
 # directory as this script.
 
 
-from sys import stderr, exit
-from pathlib import Path
 from argparse import ArgumentParser
-from urllib.request import url2pathname
-from typing import List
 from inspect import getsourcefile
+from pathlib import Path
+from sys import stderr, exit
+from typing import List
+from urllib.request import url2pathname
+
 from PIL import Image
-
-from lxml.isoschematron import Schematron
-from lxml.html import XHTMLParser
 from lxml.etree import DTD, DTDParseError, fromstring
-from lxml.etree import parse, XMLSyntaxError
-from lxml.etree import clear_error_log
-
 # These are only used for type annotations:
 # noinspection PyProtectedMember
 from lxml.etree import _Element, _ErrorLog
-
+from lxml.etree import clear_error_log
+from lxml.etree import parse, XMLSyntaxError
+from lxml.html import XHTMLParser
+from lxml.isoschematron import Schematron
 
 __all__ = ["settings", "run"]
-
 
 # XML namespaces for everything that might be used.
 # (Most of these are for parsing Schematron 'svrl' errors.)
@@ -146,7 +143,6 @@ def print_schematron_error_log(xhtml: _Element, schematron: Schematron) -> None:
     :param schematron: the Schematron with the error log
     """
     for e in schematron.error_log:
-
         # The message is a XML string containing an 'srvl:failed-assert' element
         xml = fromstring(e.message)
 

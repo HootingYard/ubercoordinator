@@ -6,18 +6,17 @@ repository and the 'export.yaml' file in the 'archive_management' repository.
 
 __all__ = ["Narration", "Article", "Show", "Index"]
 
-
 from dataclasses import dataclass
-from itertools import groupby
-from typing import Dict, List, Any, Tuple, Iterator
-from pathlib import Path
 from datetime import datetime
+from itertools import groupby
+from pathlib import Path
+from typing import Dict, List, Any, Tuple, Iterator
 
-from yaml import safe_load as yaml_load
 from lxml.html import HtmlElement, tostring as html_tostring
+from yaml import safe_load as yaml_load
 
-from functions import dictionary_order_sorting_key, sift
 from files import parse_xhtml_file, read_html_content
+from functions import dictionary_order_sorting_key, sift
 
 
 class Article:
@@ -133,7 +132,7 @@ class Show:
     def mp3_url(self) -> str:
         url = self.internet_archive_url
         assert url.startswith("https://archive.org/details/")
-        upload_name = url[url.rindex("/") + 1 :]
+        upload_name = url[url.rindex("/") + 1:]
         return f"https://archive.org/download/{upload_name}/{self.id}.mp3"
 
 
@@ -170,7 +169,7 @@ class Index:
         yield from groupby(sorted(self.get_articles()), lambda a: a.first_letter)
 
     def get_articles_by_year(
-        self, blog: int = -1
+            self, blog: int = -1
     ) -> Iterator[Tuple[int, List[Article]]]:
         def year(a):
             return a.date.year
@@ -179,7 +178,7 @@ class Index:
         yield from groupby(year_sorted, key=year)
 
     def get_articles_by_year_month(
-        self, blog: int = -1
+            self, blog: int = -1
     ) -> Iterator[Tuple[int, List[Article]]]:
         def year_month(a):
             return a.date.year, a.date.month
@@ -189,7 +188,7 @@ class Index:
             yield y, m, g
 
     def get_first_blog(
-        self,
+            self,
     ) -> Iterator[Tuple[datetime, str, List[Tuple[datetime, List[Article]]]]]:
         """
         Split the first blog's articles into groups of months containing groups of days.
@@ -203,7 +202,7 @@ class Index:
             return article.title.startswith("Hooting Yard Archive, ")
 
         for (year, month), months_articles in groupby(
-            self.get_articles(1), lambda a: (a.date.year, a.date.month)
+                self.get_articles(1), lambda a: (a.date.year, a.date.month)
         ):
             intro, months_articles = sift(months_articles, is_intro)
             intro = read_html_content(intro[0].file) if intro else ""
