@@ -4,7 +4,7 @@ This data comes from the 'bigbook/Text/toc.xhtml' file in the HootingYard 'keyml
 repository and the 'export.yaml' file in the 'archive_management' repository.
 """
 
-__all__ = ['Narration', 'Article', 'Show', 'Index']
+__all__ = ["Narration", "Article", "Show", "Index"]
 
 
 from dataclasses import dataclass
@@ -16,7 +16,7 @@ from datetime import datetime
 from yaml import safe_load as yaml_load
 from lxml.html import HtmlElement, tostring as html_tostring
 
-from functions import (dictionary_order_sorting_key, sift)
+from functions import dictionary_order_sorting_key, sift
 from files import parse_xhtml_file, read_html_content
 
 
@@ -32,12 +32,13 @@ class Article:
                 the article's file and its fully formatted title
     :ivar narrations: the article's narrations in Hooting Yard on the Air
     """
+
     id: str
     title: str
     date: datetime
     file: Path
     link: str
-    narrations: List['Narration']
+    narrations: List["Narration"]
     sorting_key: str
 
     def __init__(self, link: HtmlElement, text_dir: Path) -> None:
@@ -47,15 +48,15 @@ class Article:
                     to the article's page and contains the article's
                     fully formatted title.
         """
-        self.file = text_dir / link.get('href')
-        self.id = link.get('href')[:-6]  # remove ".xhtml" suffix
+        self.file = text_dir / link.get("href")
+        self.id = link.get("href")[:-6]  # remove ".xhtml" suffix
         self.date = datetime.fromisoformat(self.id[:10])
-        self.link = html_tostring(link, encoding='unicode').replace('.xhtml', '.html')
+        self.link = html_tostring(link, encoding="unicode").replace(".xhtml", ".html")
         self.title = str(link.text_content())
         self.sorting_key = dictionary_order_sorting_key(self.title)
         self.narrations = []
 
-    def __lt__(self, other: 'Article') -> bool:  # sorts by title
+    def __lt__(self, other: "Article") -> bool:  # sorts by title
         return self.sorting_key < other.sorting_key
 
     @property
@@ -91,8 +92,9 @@ class Narration:
     :ivar end_time: roughly when the narration ends (i.e. when the next one starts)
     :ivar word_count: the number of words spoken (?)
     """
+
     article: Article
-    show: 'Show'
+    show: "Show"
     start_time: int
     end_time: int
     word_count: int
@@ -116,6 +118,7 @@ class Show:
     :ivar internet_archive_url: page for the most recent upload to Archive.org
     :ivar narrations: article narrations detected within the show.
     """
+
     date: datetime
     title: str
     duration: int
@@ -129,8 +132,8 @@ class Show:
     @property
     def mp3_url(self) -> str:
         url = self.internet_archive_url
-        assert url.startswith('https://archive.org/details/')
-        upload_name = url[url.rindex('/') + 1:]
+        assert url.startswith("https://archive.org/details/")
+        upload_name = url[url.rindex("/") + 1 :]
         return f"https://archive.org/download/{upload_name}/{self.id}.mp3"
 
 
@@ -166,22 +169,28 @@ class Index:
     def get_articles_by_letter(self) -> Iterator[Tuple[str, List[Article]]]:
         yield from groupby(sorted(self.get_articles()), lambda a: a.first_letter)
 
-    def get_articles_by_year(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
-        def year(a): return a.date.year
+    def get_articles_by_year(
+        self, blog: int = -1
+    ) -> Iterator[Tuple[int, List[Article]]]:
+        def year(a):
+            return a.date.year
+
         year_sorted = sorted(self.get_articles(blog), key=year)
         yield from groupby(year_sorted, key=year)
 
-    def get_articles_by_year_month(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
-        def year_month(a): return a.date.year, a.date.month
+    def get_articles_by_year_month(
+        self, blog: int = -1
+    ) -> Iterator[Tuple[int, List[Article]]]:
+        def year_month(a):
+            return a.date.year, a.date.month
+
         year_month_sorted = sorted(self.get_articles(blog), key=year_month)
         for (y, m), g in groupby(year_month_sorted, key=year_month):
             yield y, m, g
 
-    def get_first_blog(self) \
-            -> Iterator[Tuple[datetime,
-                              str,
-                              List[Tuple[datetime,
-                                         List[Article]]]]]:
+    def get_first_blog(
+        self,
+    ) -> Iterator[Tuple[datetime, str, List[Tuple[datetime, List[Article]]]]]:
         """
         Split the first blog's articles into groups of months containing groups of days.
         The first blog has an introduction to each month, remove that
@@ -189,39 +198,42 @@ class Index:
         Most days' entries started with a quote of the day,
         move those to the starts of the days' entries.
         """
-        def is_intro(article: Article) -> bool:
-            return article.title.startswith('Hooting Yard Archive, ')
 
-        for (year, month), months_articles in groupby(self.get_articles(1),
-                                                      lambda a: (a.date.year, a.date.month)):
+        def is_intro(article: Article) -> bool:
+            return article.title.startswith("Hooting Yard Archive, ")
+
+        for (year, month), months_articles in groupby(
+            self.get_articles(1), lambda a: (a.date.year, a.date.month)
+        ):
             intro, months_articles = sift(months_articles, is_intro)
-            intro = read_html_content(intro[0].file) if intro else ''
+            intro = read_html_content(intro[0].file) if intro else ""
             days = []
             for date, days_articles in groupby(months_articles, lambda a: a.date):
-                quotes, rest = sift(days_articles, lambda st: st.title.startswith('“'))
+                quotes, rest = sift(days_articles, lambda st: st.title.startswith("“"))
                 days_articles = quotes + rest
                 days.append((date, days_articles))
             yield datetime(year, month, 1), intro, days
 
     def _read_articles(self, bigbook_dir: Path) -> None:
-        text_dir = bigbook_dir / 'Text'
-        toc_file = text_dir / 'toc.xhtml'
+        text_dir = bigbook_dir / "Text"
+        toc_file = text_dir / "toc.xhtml"
         html = parse_xhtml_file(toc_file)
         for a in html.xpath("//div[@class='contents']//a"):  # type: HtmlElement
             article = Article(a, text_dir)
             self.articles[article.id] = article
 
     def _read_shows(self, show_index_file: Path) -> None:
-        for show_dict in yaml_load(show_index_file.open())['shows']:
+        for show_dict in yaml_load(show_index_file.open())["shows"]:
             show = Show(**show_dict)
             self.shows[show.id] = show
             show.narrations = []
-            for n in show_dict['narrations']:  # type: Dict[str, Any]
-                article_id = n['story_id']
-                if not article_id.startswith('external_'):
+            for n in show_dict["narrations"]:  # type: Dict[str, Any]
+                article_id = n["story_id"]
+                if not article_id.startswith("external_"):
                     article = self.articles[article_id]
-                    narration = Narration(article, show, n['start_time'],
-                                          n['end_time'], n['word_count'])
+                    narration = Narration(
+                        article, show, n["start_time"], n["end_time"], n["word_count"]
+                    )
                     article.narrations.append(narration)
                     show.narrations.append(narration)
             show.narrations.sort()

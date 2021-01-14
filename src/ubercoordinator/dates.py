@@ -3,12 +3,12 @@ Functions to format dates into strings.
 """
 
 __all__ = [
-    'minute_second',
-    'brief_date',
-    'written_date',
-    'full_written_date',
-    'month_and_year',
-    'month_id'
+    "minute_second",
+    "brief_date",
+    "written_date",
+    "full_written_date",
+    "month_and_year",
+    "month_id",
 ]
 
 from datetime import datetime
@@ -53,7 +53,7 @@ def month_and_year(date: datetime) -> str:
     >>> month_and_year(datetime(2012, 1, 22))
     'January 2012'
     """
-    return date.strftime('%B&nbsp;%Y')
+    return date.strftime("%B&nbsp;%Y")
 
 
 def ordinal(n: int) -> str:
@@ -61,8 +61,8 @@ def ordinal(n: int) -> str:
     >>> ordinal(3)
     '3rd'
     """
-    return str(n) + {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 20, 'th')
+    return str(n) + {1: "st", 2: "nd", 3: "rd"}.get(n % 20, "th")
 
 
 def month_id(date: datetime) -> str:
-    return date.strftime('month-%Y-%m')
+    return date.strftime("month-%Y-%m")

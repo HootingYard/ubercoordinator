@@ -4,7 +4,9 @@ from setuptools import setup
 setup(
     name='ubercoordinator',
     version='0.1',
-    packages=open('requirements.txt').readlines(),
+    install_requires=open('requirements.txt').readlines(),
+    package_dir={"":"src"},
+    packages=["ubercoordinator"],
     python_requires='>=3.7',
     url='',
     license='',
