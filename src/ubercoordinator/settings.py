@@ -30,7 +30,7 @@ def _get_directory(env_variable_name: str, default_subdir: str) -> Path:
 
 
 def _get_ubercoordinator_dir() -> Path:
-    src_dir = Path(getsourcefile(lambda _: None))  # i.e. this module's directory
+    src_dir = Path(getsourcefile(lambda _: None)).parent  # i.e. this module's directory
     uber_dir = src_dir.parent.parent
     assert uber_dir.name == "ubercoordinator"
     return uber_dir
