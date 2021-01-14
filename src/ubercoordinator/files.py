@@ -1,7 +1,6 @@
-
 __all__ = [
-    'parse_xhtml_file',
-    'read_html_content',
+    "parse_xhtml_file",
+    "read_html_content",
 ]
 
 from pathlib import Path
@@ -31,12 +30,12 @@ def read_html_content(file: Path, heading: bool = False) -> str:
     :return: the HTML as a string
     """
     html = parse_xhtml_file(file)
-    body: HtmlElement = html.xpath('//body')[0]
+    body: HtmlElement = html.xpath("//body")[0]
     if not heading:
-        h1: HtmlElement = body.xpath('//h1')[0]
+        h1: HtmlElement = body.xpath("//h1")[0]
         h1.drop_tree()
     body.attrib.clear()
     for a in body.xpath('//a[@class="internal"]'):
-        a.attrib['href'] = a.attrib['href'].replace('.xhtml', '.html')
-    body.tag = 'div'
-    return tostring(body, pretty_print=True, encoding='unicode')
+        a.attrib["href"] = a.attrib["href"].replace(".xhtml", ".html")
+    body.tag = "div"
+    return tostring(body, pretty_print=True, encoding="unicode")

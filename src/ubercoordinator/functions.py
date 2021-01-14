@@ -2,21 +2,19 @@
 Handy miscellaneous functions.
 """
 
-__all__ = [
-    'sift',
-    'dictionary_order_sorting_key'
-]
+__all__ = ["sift", "dictionary_order_sorting_key"]
 
 import re
 from typing import List, TypeVar, Tuple, Callable, Iterable
 from num2words import num2words
 from unidecode import unidecode
 
-A = TypeVar('A')
+A = TypeVar("A")
 
 
-def sift(sequence: Iterable[A],
-         condition: Callable[[A], bool]) -> Tuple[List[A], List[A]]:
+def sift(
+    sequence: Iterable[A], condition: Callable[[A], bool]
+) -> Tuple[List[A], List[A]]:
     """
     Sift an iterable into two lists: one for elements that match a condition
     and one for elements that do not.
@@ -48,14 +46,14 @@ def dictionary_order_sorting_key(title: str) -> str:
     s = unidecode(title.casefold())
     s = s.replace("&", "and")
     s = re.sub(r"\W+", " ", s).strip()
-    if s.startswith('a ') and not s.startswith('a is for '):
+    if s.startswith("a ") and not s.startswith("a is for "):
         s = s[2:]
-    if s.startswith('an '):
+    if s.startswith("an "):
         s = s[3:]
-    if s.startswith('the '):
+    if s.startswith("the "):
         s = s[4:]
     if s[0].isdigit():
-        digits, rest = re.match(r'([0-9]+)(.*)', s).group(1, 2)
+        digits, rest = re.match(r"([0-9]+)(.*)", s).group(1, 2)
         s = num2words(int(digits)) + rest
         s = re.sub(r"\W+", " ", s)
-    return s.replace(' ', '')
+    return s.replace(" ", "")

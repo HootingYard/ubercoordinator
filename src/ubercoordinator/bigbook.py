@@ -34,7 +34,7 @@ from lxml.etree import clear_error_log
 from lxml.etree import _Element, _ErrorLog
 
 
-__all__ = ['settings', 'run']
+__all__ = ["settings", "run"]
 
 
 # XML namespaces for everything that might be used.
@@ -42,11 +42,11 @@ __all__ = ['settings', 'run']
 XMLNS = {
     "xhtml": "http://www.w3.org/1999/xhtml",
     "regexp": "http://exslt.org/regular-expressions",
-    'xs': "http://www.w3.org/2001/XMLSchema",
+    "xs": "http://www.w3.org/2001/XMLSchema",
     "sch": "http://purl.oclc.org/dsdl/schematron",
-    'iso': "http://purl.oclc.org/dsdl/schematron",
-    'svrl': "http://purl.oclc.org/dsdl/svrl",
-    'schold': "http://www.ascc.net/xml/schematron",
+    "iso": "http://purl.oclc.org/dsdl/schematron",
+    "svrl": "http://purl.oclc.org/dsdl/svrl",
+    "schold": "http://www.ascc.net/xml/schematron",
 }
 
 
@@ -55,11 +55,12 @@ class Settings:
     Global settings.
     These are set by the 'argparse' command line.
     """
-    dtd: Path          # path to the DTD file
-    schematron: Path   # path to the Schematron file
+
+    dtd: Path  # path to the DTD file
+    schematron: Path  # path to the Schematron file
     files: List[Path]  # XHTML files to test
     test_images: bool  # True for image file validity checks
-    verbose: bool      # if True print the names of files as they are checked
+    verbose: bool  # if True print the names of files as they are checked
 
     def __init__(self):
         """
@@ -73,8 +74,8 @@ class Settings:
         self.files = []
         data_file_dir = Path(getsourcefile(Settings)).parent
         assert data_file_dir.is_dir()
-        self.dtd = data_file_dir / 'bigbook.dtd'
-        self.schematron = data_file_dir / 'bigbook.sch'
+        self.dtd = data_file_dir / "bigbook.dtd"
+        self.schematron = data_file_dir / "bigbook.sch"
         assert self.schematron.is_file()
         assert self.dtd.is_file()
 
@@ -150,10 +151,12 @@ def print_schematron_error_log(xhtml: _Element, schematron: Schematron) -> None:
         xml = fromstring(e.message)
 
         # Schematron reports the location of a faulty element with an Xpath selector.
-        location_xpath = xml.xpath('//svrl:failed-assert/@location', namespaces=XMLNS)[0]
+        location_xpath = xml.xpath("//svrl:failed-assert/@location", namespaces=XMLNS)[
+            0
+        ]
         line = xhtml.xpath(location_xpath, namespaces=XMLNS)[0].sourceline
 
-        message = xml.xpath('normalize-space(//svrl:text)', namespaces=XMLNS)
+        message = xml.xpath("normalize-space(//svrl:text)", namespaces=XMLNS)
 
         print(f"{e.filename}:{line}:0: {message}", file=stderr)
 
@@ -254,20 +257,31 @@ def main() -> None:
     """
     parser = ArgumentParser(description=__doc__)
     parser.add_argument(
-        "-d", "--dtd", metavar="DTD", type=Path,
-        help="a non-default DTD file")
+        "-d", "--dtd", metavar="DTD", type=Path, help="a non-default DTD file"
+    )
     parser.add_argument(
-        "-x", "--schematron", metavar="SCH", type=Path,
-        help="a non-default Schematron schema")
+        "-x",
+        "--schematron",
+        metavar="SCH",
+        type=Path,
+        help="a non-default Schematron schema",
+    )
     parser.add_argument(
-        "-i", "--test-images", action="store_true",
-        help="also test image validity")
+        "-i", "--test-images", action="store_true", help="also test image validity"
+    )
     parser.add_argument(
-        "-v", "--verbose", action="store_true",
-        help="print file names as they are tested")
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="print file names as they are tested",
+    )
     parser.add_argument(
-        "files", type=Path, metavar="XHTML", nargs="*",
-        help="Big Book of Key files to test")
+        "files",
+        type=Path,
+        metavar="XHTML",
+        nargs="*",
+        help="Big Book of Key files to test",
+    )
     parser.parse_args(namespace=settings)
 
     success = run(settings.files)
