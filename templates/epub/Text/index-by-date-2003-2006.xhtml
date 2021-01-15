@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<%!
+    from dates import full_written_date, month_and_year, month_id
+%>
+<html xml:lang="en-GB" lang="en-GB">
+    <head>
+        <title>The Hooting Yard Blog, 2003-2006</title>
+        <meta name="author" content="Hooting Yard Archivists (a.k.a. The Soup Committee)"/>
+        <meta name="description" content="A chronological index of the works by Frank Key."/>
+        <meta name="language" content="en-GB"/>
+        <meta name="generator" content="ÜBERCOÖRDINATOR"/>
+        <meta charset="utf-8"/>
+        <link href="../Styles/style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body class="toc" id="top">
+        <h1>The Hooting Yard Blog, 2003–2006</h1>
+
+        <dl class="month">
+            % for date, introduction, days in index.index_for_first_blog():
+            <div>
+                <dt><a href="#${month_id(date)}">${month_and_year(date)}</a></dt>
+                % if introduction:
+                <dd>
+                    ${introduction}
+                </dd>
+                % endif
+            </div>
+            % endfor
+        </dl>
+
+        % for date, introduction, days in index.index_for_first_blog():
+        <div id="${month_id(date)}">
+            <h2>${month_and_year(date)}</h2>
+
+            ${introduction}
+
+            <dl class="day">
+                % for date, articles in days:
+                <div>
+                    <dt>${full_written_date(date)}</dt>
+                    %for article in articles:
+                    <dd id="${article.id}">
+                        ${article.link}
+                        % if article.narrations:
+                        <span class="speaker">&#xf028;</span>
+                        % endif
+                    </dd>
+                    %endfor
+                </div>
+                % endfor
+            </dl>
+        </div>
+        % endfor
+    </body>
+</html>

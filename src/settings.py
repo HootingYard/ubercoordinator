@@ -45,7 +45,7 @@ SHOW_INDEX_FILE = _get_directory('SHOW_INDEX_FILE', 'analysis/index/export/expor
 
 
 WEBSITE_DIR = _get_directory('WEBSITE_DIR', 'HootingYard.github.io')
-"""The output directoryy for the website, in the 'HootingYard.github.io' repository."""
+"""The output directory for the website, in the 'HootingYard.github.io' repository."""
 
 
 WEB_TEMPLATE_DIR = _get_ubercoordinator_dir() / 'templates' / 'website'

@@ -41,7 +41,7 @@ def main() -> None:
         html_file.write_text(template.render(index=index))
 
     # Expand the pages for the Big Book, using the page.html template.
-    for article in index.get_articles():
+    for article in index.articles():
         # content = xhtml.content(article.file, heading=True)
         # I'm going to be a barbarian instead and use a regex on HTML.
         # It's acceptably accurate on these Big Book files, and much faster.

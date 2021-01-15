@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!--suppress HtmlUnknownAnchorTarget -->
 <%!
-from dates import brief_date
+    from dates import brief_date
 %>
-<html lang="en-GB">
+<html xml:lang="en-GB" lang="en-GB">
 <head>
     <title>Hooting Yard Index</title>
     <meta name="author" content="Hooting Yard Archivists (a.k.a. The Soup Committee)" />
@@ -14,14 +14,6 @@ from dates import brief_date
     <link href="../Styles/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="toc" id="top">
-    <div class="illustration">
-        <p class="imagerow">
-            <a href="../index.html">
-                <img class="fullwidth" src="../Images/yardlogo.gif" alt="Hooting Yard Banner"/>
-            </a>
-        </p>
-    </div>
-
     <h1>The Unhelpful Index</h1>
 
     <p><em>This index lists the headings of all the items on the main pages
@@ -65,16 +57,15 @@ from dates import brief_date
             <div id="${letter}">
                 <h2>${letter} is for…</h2>
                 % for article in articles:
-                <p id="${article.id}">
-                    ${article.link}
-                    % if article.narrations:
-                    <span class="speaker">&#xf028;</span>
-                    % endif
-                    <em>— ${brief_date(article.date)}</em>
-                </p>
+                    <p id="${article.id}">
+                        ${article.link}
+                        % if article.narrations:
+                            <span class="speaker">&#xf028;</span>
+                        % endif
+                        <em>— ${brief_date(article.date)}</em>
+                    </p>
                 % endfor
             </div>
-            <p class="up"><a href="#top">Back to the top. Hup!</a></p>
         % endfor
     </div>
 </body>

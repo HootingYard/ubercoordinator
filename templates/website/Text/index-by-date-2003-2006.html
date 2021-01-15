@@ -27,7 +27,7 @@
 <div class="contents">
 
 <dl class="month">
-    % for date, introduction, days in index.get_first_blog():
+    % for date, introduction, days in index.index_for_first_blog():
     <div>
         <dt><a href="#${month_id(date)}">${month_and_year(date)}</a></dt>
         % if introduction:
@@ -45,7 +45,7 @@
 
 <div class="blockparagraphs">
 
-% for date, introduction, days in index.get_first_blog():
+% for date, introduction, days in index.index_for_first_blog():
 <div id="${month_id(date)}">
     <h2>${month_and_year(date)}</h2>
 

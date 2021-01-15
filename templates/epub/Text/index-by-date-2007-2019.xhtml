@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<%!
+    from dates import month_and_year, brief_date, month_id
+    from itertools import groupby
+    from datetime import datetime
+%>
+<html xml:lang="en" lang="en-GB">
+    <head>
+        <title>The Hooting Yard Blog, 2007-2019</title>
+        <meta name="author" content="Hooting Yard Archivists (a.k.a. The Soup Committee)"/>
+        <meta name="description" content="A chronological index of the works by Frank Key."/>
+        <meta name="language" content="en-GB"/>
+        <meta name="generator" content="ÜBERCOÖRDINATOR"/>
+        <meta charset="utf-8"/>
+        <link href="../Styles/style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body class="toc" id="top">
+
+        <h1>Hooting Yard, A Website by Frank Key, 2007–2019</h1>
+
+        <dl>
+            % for year, articles in index.articles_by_year(2):
+                <div>
+                    <dt>${year}</dt>
+                    % for month, _ in groupby(articles, lambda a: a.date.month):
+                        <% date = datetime(year, month, 1) %>
+                        <dd><a href="#${month_id(date)}">${date.strftime('%b')}</a></dd>
+                    % endfor
+                </div>
+            % endfor
+        </dl>
+
+        % for year, month, months_articles in index.articles_by_month(2):
+            <% date = datetime(year, month, 1) %>
+            <div id="${month_id(date)}" class="contents">
+                <h2>${month_and_year(date)}</h2>
+                % for article in months_articles:
+                    <p id="${article.id}">
+                        ${article.link}
+                        % if article.narrations:
+                        <span class="speaker">&#xf028;</span>
+                        % endif
+                        <em>— ${brief_date(article.date)}</em>
+                    </p>
+                % endfor
+            </div>
+        % endfor
+    </body>
+</html>

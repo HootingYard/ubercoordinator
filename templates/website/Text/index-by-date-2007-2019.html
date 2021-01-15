@@ -27,7 +27,7 @@
 <h1>Hooting Yard, A Website by Frank Key, 2007–2019</h1>
 
 <div class="contents">
-    % for year, articles in index.get_articles_by_year(2):
+    % for year, articles in index.articles_by_year(2):
     <p>
         <strong>${year}</strong>
         % for month, _ in groupby(articles, lambda a: a.date.month):
@@ -38,7 +38,7 @@
     % endfor
 </div>
 
-% for year, month, months_articles in index.get_articles_by_year_month(2):
+% for year, month, months_articles in index.articles_by_month(2):
 <% date = datetime(year, month, 1) %>
 <div id="${month_id(date)}" class="contents">
     <h2>${month_and_year(date)}</h2>

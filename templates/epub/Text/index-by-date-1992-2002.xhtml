@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xml:lang="en" lang="en-GB">
+    <head>
+        <title>Hooting Yard, Index by Date, 1992-2002</title>
+        <meta name="author" content="Hooting Yard Archivists (a.k.a. The Soup Committee)"/>
+        <meta name="description" content="A chronological index of the works by Frank Key."/>
+        <meta name="language" content="en-GB"/>
+        <meta name="generator" content="ÜBERCOÖRDINATOR"/>
+        <meta charset="utf-8"/>
+        <link href="../Styles/style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body class="toc">
+
+    <h1>The Mists of Time</h1>
+
+        <p><em>Frank Key ran <em>The Hooting Yard Home Page</em> from 1992 to 2002. With the aid of a diving bell and the Wayback Machine, this is the content we were able to recover. —Hooting Yard Archivists </em></p>
+
+        <div class="contents">
+            % for article in index.articles(0):
+                <p id="${article.id}">
+                    ${article.link}
+                    % if article.narrations:
+                        <span class="speaker">&#xf028;</span>
+                    % endif
+                </p>
+            % endfor
+        </div>
+    </body>
+</html>

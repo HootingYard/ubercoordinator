@@ -136,48 +136,49 @@ class Show:
 
 class Index:
     """
-    :ivar articles: 'articles' is an ordered dictionary of article ID to Article object.
+    :ivar articles_by_id: 'articles_by_id' is an ordered dictionary of article
+    ID to Article object.
     the values are in the order that they appear in the Big Book toc.xhtml
     Sorting the values puts them into correct dictionary order.
 
-    :ivar shows: 'shows' is an ordered dictionary of show ID to Show object.
+    :ivar shows_by_id: 'shows_by_id' is an ordered dictionary of show ID to Show object.
     the values are in the order that they appear in the export.yaml
 
     Article and Show objects point to intermediate Narration objects that relate
     which articles were read in which shows.
     """
 
-    articles: Dict[str, Article]  # key is id
+    articles_by_id: Dict[str, Article]  # key is id
 
-    shows: Dict[str, Show]  # key is show_id
+    shows_by_id: Dict[str, Show]  # key is id
 
     def __init__(self, bigbook_dir: Path, show_index_file: Path) -> None:
-        self.shows = {}
-        self.articles = {}
+        self.shows_by_id = {}
+        self.articles_by_id = {}
         self._read_articles(bigbook_dir)
         self._read_shows(show_index_file)
 
-    def get_articles(self, blog: int = -1) -> Iterator[Article]:
+    def articles(self, blog: int = -1) -> Iterator[Article]:
         if blog == -1:
-            yield from self.articles.values()
+            yield from self.articles_by_id.values()
         else:
-            yield from filter(lambda a: a.blog == blog, self.articles.values())
+            yield from filter(lambda a: a.blog == blog, self.articles_by_id.values())
 
-    def get_articles_by_letter(self) -> Iterator[Tuple[str, List[Article]]]:
-        yield from groupby(sorted(self.get_articles()), lambda a: a.first_letter)
+    def articles_by_letter(self) -> Iterator[Tuple[str, List[Article]]]:
+        yield from groupby(sorted(self.articles()), lambda a: a.first_letter)
 
-    def get_articles_by_year(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
+    def articles_by_year(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
         def year(a): return a.date.year
-        year_sorted = sorted(self.get_articles(blog), key=year)
+        year_sorted = sorted(self.articles(blog), key=year)
         yield from groupby(year_sorted, key=year)
 
-    def get_articles_by_year_month(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
+    def articles_by_month(self, blog: int = -1) -> Iterator[Tuple[int, List[Article]]]:
         def year_month(a): return a.date.year, a.date.month
-        year_month_sorted = sorted(self.get_articles(blog), key=year_month)
-        for (y, m), g in groupby(year_month_sorted, key=year_month):
-            yield y, m, g
+        year_month_sorted = sorted(self.articles(blog), key=year_month)
+        for (year, month), group in groupby(year_month_sorted, key=year_month):
+            yield year, month, group
 
-    def get_first_blog(self) \
+    def index_for_first_blog(self) \
             -> Iterator[Tuple[datetime,
                               str,
                               List[Tuple[datetime,
@@ -192,7 +193,7 @@ class Index:
         def is_intro(article: Article) -> bool:
             return article.title.startswith('Hooting Yard Archive, ')
 
-        for (year, month), months_articles in groupby(self.get_articles(1),
+        for (year, month), months_articles in groupby(self.articles(1),
                                                       lambda a: (a.date.year, a.date.month)):
             intro, months_articles = sift(months_articles, is_intro)
             intro = read_html_content(intro[0].file) if intro else ''
@@ -209,17 +210,17 @@ class Index:
         html = parse_xhtml_file(toc_file)
         for a in html.xpath("//div[@class='contents']//a"):  # type: HtmlElement
             article = Article(a, text_dir)
-            self.articles[article.id] = article
+            self.articles_by_id[article.id] = article
 
     def _read_shows(self, show_index_file: Path) -> None:
         for show_dict in yaml_load(show_index_file.open())['shows']:
             show = Show(**show_dict)
-            self.shows[show.id] = show
+            self.shows_by_id[show.id] = show
             show.narrations = []
             for n in show_dict['narrations']:  # type: Dict[str, Any]
                 article_id = n['story_id']
                 if not article_id.startswith('external_'):
-                    article = self.articles[article_id]
+                    article = self.articles_by_id[article_id]
                     narration = Narration(article, show, n['start_time'],
                                           n['end_time'], n['word_count'])
                     article.narrations.append(narration)
