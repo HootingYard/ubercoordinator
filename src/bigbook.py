@@ -20,7 +20,6 @@ from pathlib import Path
 from argparse import ArgumentParser
 from urllib.request import url2pathname
 from typing import List
-from inspect import getsourcefile
 from PIL import Image
 
 from lxml.isoschematron import Schematron
@@ -71,10 +70,8 @@ class Settings:
         self.test_images = False
         self.verbose = False
         self.files = []
-        data_file_dir = Path(getsourcefile(Settings)).parent
-        assert data_file_dir.is_dir()
-        self.dtd = data_file_dir / 'bigbook.dtd'
-        self.schematron = data_file_dir / 'bigbook.sch'
+        self.dtd = Path(__file__).parent / 'bigbook.dtd'
+        self.schematron = Path(__file__).parent / 'bigbook.sch'
         assert self.schematron.is_file()
         assert self.dtd.is_file()
 

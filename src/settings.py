@@ -7,15 +7,19 @@ will look for repository directories inside '~/Projects/HootingYard'.
 """
 
 __all__ = [
-    'BIGBOOK_DIR',
-    'WEBSITE_DIR',
     'SHOW_INDEX_FILE',
-    'WEB_TEMPLATE_DIR',
+    'BIGBOOK_DIR',
+    'TEMPLATE_DIR',
+    'WEBSITE_DIR',
+    'WEBSITE_URL',
 ]
 
 from os import environ
 from pathlib import Path
-from inspect import getsourcefile
+
+
+WEBSITE_URL = 'http://hootingyard.github.io'
+"""Location of the online Hooting Yard Archive"""
 
 
 _DEFAULT_REPO_DIR = Path('~/Projects/HootingYard/').expanduser()
@@ -30,13 +34,13 @@ def _get_directory(env_variable_name: str, default_subdir: str) -> Path:
 
 
 def _get_ubercoordinator_dir() -> Path:
-    src_dir = Path(getsourcefile(lambda _: None))  # i.e. this module's directory
-    uber_dir = src_dir.parent.parent
+    src_dir = Path(__file__).parent
+    uber_dir = src_dir.parent
     assert uber_dir.name == 'ubercoordinator'
     return uber_dir
 
 
-BIGBOOK_DIR = _get_directory('BIG_BOOK_DIR', 'keyml/books/bigbook')
+BIGBOOK_DIR = _get_directory('BIG_BOOK_DIR', 'bigbook')
 """The Big Book of Key's base directory in the 'keyml' repository."""
 
 
@@ -48,7 +52,7 @@ WEBSITE_DIR = _get_directory('WEBSITE_DIR', 'HootingYard.github.io')
 """The output directory for the website, in the 'HootingYard.github.io' repository."""
 
 
-WEB_TEMPLATE_DIR = _get_ubercoordinator_dir() / 'templates' / 'website'
-"""The directory of webpage template files."""
+TEMPLATE_DIR = _get_ubercoordinator_dir() / 'templates'
+"""The directory of template files."""
 
 

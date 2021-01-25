@@ -1,0 +1,106 @@
+<!-- Ebook metadata and document structure, for use in book data directories -->
+
+<!-- simplified XHTML text -->
+
+<!ENTITY % text  "(#PCDATA | em | strong)*" >
+<!ELEMENT em     %text; >
+<!ELEMENT strong %text; >
+<!ENTITY  quot   "&#34;">
+
+<!ELEMENT p  (#PCDATA | em | strong | a | br)* >
+<!ELEMENT br EMPTY >
+<!ELEMENT a  %text; >
+<!ATTLIST a
+          href CDATA #REQUIRED
+          class CDATA #IMPLIED >
+
+<!-- book -->
+
+<!ELEMENT book (
+          title,
+          description,
+          subject,
+          author,
+          editor?,
+          publisher?,
+          license?,
+          styling?,
+          contents,
+          illustrations?,
+          attributions? ) >
+
+<!ATTLIST book
+          file     CDATA #REQUIRED
+          year     CDATA #REQUIRED
+          language CDATA #REQUIRED
+          uuid     CDATA #IMPLIED
+          date     CDATA #IMPLIED >
+
+<!ELEMENT title       %text; >
+<!ELEMENT description %text; >
+<!ELEMENT subject     %text; >
+<!ELEMENT editor      %text; >
+<!ELEMENT author      %text; >
+<!ELEMENT publisher   %text; >
+<!ELEMENT license     (p+) >
+
+<!ATTLIST author
+          pronoun CDATA #REQUIRED
+          file-as CDATA #REQUIRED
+          href    CDATA #REQUIRED >
+
+<!ATTLIST publisher
+          href    CDATA #REQUIRED >
+
+<!-- XHTML styles and fonts -->
+
+<!ELEMENT styling (style | font)* >
+
+<!ELEMENT style EMPTY >  <!-- CSS style sheet -->
+<!ATTLIST style
+          file CDATA #REQUIRED > 
+
+<!ELEMENT font EMPTY >  <!-- TTF font file -->
+<!ATTLIST font
+          file CDATA #REQUIRED > 
+
+<!-- table of contents -->
+
+<!ELEMENT contents (
+          open-at?,
+          section+ ) >
+
+<!ELEMENT open-at EMPTY >
+<!ATTLIST open-at
+          file CDATA #REQUIRED >
+
+<!ELEMENT section (title?, (section)*) >
+<!ATTLIST section
+          id         CDATA    #IMPLIED 
+          file       CDATA    #IMPLIED
+          template   (yes|no) #IMPLIED
+          toc        (yes|no) #IMPLIED
+          separate   (yes|no) #IMPLIED
+          author     IDREFS   #IMPLIED
+          editor     IDREFS   #IMPLIED 
+          translator IDREFS   #IMPLIED >  <!-- creator ids -->
+
+<!-- illustrations -->
+
+<!ELEMENT illustrations (image)* >
+
+<!ELEMENT image EMPTY >
+<!ATTLIST image
+          file CDATA  #REQUIRED
+          id   ID     #IMPLIED
+          alt  CDATA  #IMPLIED
+          by   IDREFS #IMPLIED >
+
+<!-- attributions -->
+
+<!ELEMENT attributions (creator)* >
+
+<!ELEMENT creator %text; >
+<!ATTLIST creator 
+          id   ID    #REQUIRED
+          href CDATA #IMPLIED >

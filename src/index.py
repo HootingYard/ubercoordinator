@@ -6,10 +6,10 @@ repository and the 'export.yaml' file in the 'archive_management' repository.
 
 __all__ = ['Narration', 'Article', 'Show', 'Index']
 
-
+import re
 from dataclasses import dataclass
 from itertools import groupby
-from typing import Dict, List, Any, Tuple, Iterator
+from typing import Dict, List, Any, Tuple, Iterator, Set
 from pathlib import Path
 from datetime import datetime
 
@@ -40,14 +40,14 @@ class Article:
     narrations: List['Narration']
     sorting_key: str
 
-    def __init__(self, link: HtmlElement, text_dir: Path) -> None:
+    def __init__(self, link: HtmlElement, bigbook_dir: Path) -> None:
         """
-        :param text_dir: the 'bigbook/Text' directory of article pages
+        :param bigbook_dir: the Big Book of Key directory
         :param link: an 'a' element from the table of contents that links
                     to the article's page and contains the article's
                     fully formatted title.
         """
-        self.file = text_dir / link.get('href')
+        self.file = bigbook_dir / 'Text' / link.get('href')
         self.id = link.get('href')[:-6]  # remove ".xhtml" suffix
         self.date = datetime.fromisoformat(self.id[:10])
         self.link = html_tostring(link, encoding='unicode').replace('.xhtml', '.html')
@@ -152,11 +152,12 @@ class Index:
 
     shows_by_id: Dict[str, Show]  # key is id
 
-    def __init__(self, bigbook_dir: Path, show_index_file: Path) -> None:
+    def __init__(self, bigbook_dir: Path, show_index_file: Path = None) -> None:
         self.shows_by_id = {}
         self.articles_by_id = {}
         self._read_articles(bigbook_dir)
-        self._read_shows(show_index_file)
+        if show_index_file:
+            self._read_shows(show_index_file)
 
     def articles(self, blog: int = -1) -> Iterator[Article]:
         if blog == -1:
@@ -205,11 +206,10 @@ class Index:
             yield datetime(year, month, 1), intro, days
 
     def _read_articles(self, bigbook_dir: Path) -> None:
-        text_dir = bigbook_dir / 'Text'
-        toc_file = text_dir / 'toc.xhtml'
+        toc_file = bigbook_dir / 'Text' / 'toc.xhtml'
         html = parse_xhtml_file(toc_file)
         for a in html.xpath("//div[@class='contents']//a"):  # type: HtmlElement
-            article = Article(a, text_dir)
+            article = Article(a, bigbook_dir)
             self.articles_by_id[article.id] = article
 
     def _read_shows(self, show_index_file: Path) -> None:

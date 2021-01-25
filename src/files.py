@@ -40,3 +40,27 @@ def read_html_content(file: Path, heading: bool = False) -> str:
         a.attrib['href'] = a.attrib['href'].replace('.xhtml', '.html')
     body.tag = 'div'
     return tostring(body, pretty_print=True, encoding='unicode')
+
+
+r'''
+class Finder:
+    """
+    Search for a file in a sequence of directories,
+    and if that fails the try to find a suitable template file.
+    """
+    def __init__(self, *paths: Path, templates: Path = None) -> None:
+        self.paths = paths
+        self.templates = templates
+
+    def __call__(self, subdir: str, filename: str) -> Path:
+        for directory in self.paths:
+            path = directory / subdir / filename
+            if path.exists():
+                return path
+        if self.templates:
+            stem, _ = splitext(filename)
+            for file in self.templates.glob('*'):
+                if file.stem == stem:
+                    return file
+        raise FileNotFoundError(filename)
+'''

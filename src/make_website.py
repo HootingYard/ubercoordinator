@@ -2,14 +2,14 @@ import re
 from shutil import copyfile
 from mako.lookup import TemplateLookup
 
-from settings import BIGBOOK_DIR, WEBSITE_DIR, WEB_TEMPLATE_DIR, SHOW_INDEX_FILE
+from settings import BIGBOOK_DIR, WEBSITE_DIR, TEMPLATE_DIR, SHOW_INDEX_FILE
 from index import Index
 
 
 def main() -> None:
     index = Index(BIGBOOK_DIR, SHOW_INDEX_FILE)
 
-    templates = TemplateLookup([WEB_TEMPLATE_DIR, WEB_TEMPLATE_DIR / 'Text'],
+    templates = TemplateLookup([TEMPLATE_DIR / 'website', TEMPLATE_DIR / 'website' / 'Text'],
                                strict_undefined=True)
 
     # Create website directories, if necessary.
@@ -18,7 +18,9 @@ def main() -> None:
 
     # Copy in the styling files from the web template.
     for dirname in ('Fonts', 'Styles', 'Images'):
-        for file in (WEB_TEMPLATE_DIR / dirname).glob('*'):
+        for file in (TEMPLATE_DIR / 'common' / dirname).glob('*'):
+            copyfile(src=file, dst=WEBSITE_DIR / dirname / file.name)
+        for file in (TEMPLATE_DIR / 'website' / dirname).glob('*'):
             copyfile(src=file, dst=WEBSITE_DIR / dirname / file.name)
 
     # Copy in the Big Book's media files, if necessary.
@@ -29,13 +31,13 @@ def main() -> None:
                 copyfile(src=file, dst=dst)
 
     # Expand the 'index.html' file template.
-    file = WEB_TEMPLATE_DIR / 'index.html'
+    file = TEMPLATE_DIR / 'website' / 'index.html'
     template = templates.get_template(file.name)
     html_file = WEBSITE_DIR / file.name
     html_file.write_text(template.render(index=index))
 
     # Expand the index pages' templates.
-    for file in (WEB_TEMPLATE_DIR / 'Text').glob('index-*.html'):
+    for file in (TEMPLATE_DIR / 'website' / 'Text').glob('index-*.html'):
         template = templates.get_template(file.name)
         html_file = WEBSITE_DIR / 'Text' / file.name
         html_file.write_text(template.render(index=index))

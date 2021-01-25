@@ -1,0 +1,23 @@
+Repositories:
+  - bigbook:
+      contents:
+      - The Big Book of Key
+      - The bigbook.py validation scripts
+      actions:
+
+    archives
+  - Everything that never needs to be updated:
+    The Hooting Yard Web Page
+    The original 2003-2006 archive
+    The static hootingyard.org
+    etc
+
+    HootingYard.github.io
+    The Hooting Yard Archive website
+    Ebook for downloading
+    Hooting Yard music (?)
+
+    archive_management
+  Radio show management:
+    Show indexing scripts
+    Archive.org

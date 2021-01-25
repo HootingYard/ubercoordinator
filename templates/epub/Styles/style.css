@@ -1,0 +1,478 @@
+/* Hooting Yard website CSS style sheet */
+
+
+/* Fonts ------------------------------------------------------------------ */
+
+@font-face {
+    font-family: 'Libertine';
+    src: url('../Fonts/LinLibertine_Rah.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Libertine';
+    src: url('../Fonts/LinLibertine_RIah.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Libertine';
+    src: url('../Fonts/LinLibertine_RBah.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Libertine';
+    src: url('../Fonts/LinLibertine_RBIah.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Opera' ;
+    src: url('../Fonts/opera-lyrics-smooth.ttf') format('truetype');
+}
+
+@font-face {
+    /* Font Awesome icon font by Dave Gandry, SIL license */
+    font-family: 'Icons' ;
+    src: url('../Fonts/fontawesome-webfont.ttf') format('truetype');
+}
+
+/* Body ---------------------------------------------------------------- */
+
+body {
+    font-family: 'Libertine', serif;
+    /* font-size: 120%; Libertine seems a little small */
+}
+
+/* Headings ------------------------------------------------------------- */
+
+h1 {
+    font-size: 160%;
+    font-weight: normal;
+    font-family: 'Opera', serif;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+h1.plain {
+    font-family: 'Libertine', serif;
+}
+
+h1.center {
+    text-align: center;
+}
+
+h2 {
+    font-size: 130%;
+    font-weight: normal;
+    font-family: 'Opera', serif;
+    text-transform: uppercase;
+    margin-top: 2em;
+    text-align: left;
+}
+
+h2.center {
+    text-align: center;
+}
+
+h2.preen {
+    text-transform: lowercase;
+    text-align: left;
+}
+
+h1.discrete, h2.discrete { /* the same as bold paragraph text */
+    font-family: 'Libertine', serif;
+    font-weight: bold;
+    text-transform: none;
+    text-align: left;
+    margin-bottom: 0.5em;
+}
+
+p.byline {
+    font-family: 'Opera', serif;
+    text-indent: 0;
+    margin-bottom: 2em;
+    text-align: left;
+}
+
+
+/* Paragraphs and lists ------------------------------------------------------------- */
+
+
+/* horizontal rules break paragraphs, and are usually invisible */
+hr {
+    border: none;
+    overflow: visible;
+    text-align: center;
+    height: 0;
+}
+
+
+/* this looks good in a browser */
+p {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-indent: 2em;
+    line-height: 1.3em;
+    text-align: justify;
+}
+
+/* this looks good in an ebook reader:*/
+/* p { 
+    margin-top:0;
+    margin-bottom:0;
+    text-indent:2em;
+    text-align:justify;
+} */
+
+p.center {
+    text-indent: 0;
+    text-align: center;
+}
+
+/* Paragraphs separated from the paragraph above */
+p.breakabove, p.footnote {
+    text-indent: 0;
+    margin-top: 0.5em;
+}
+
+p.editor, p.source {
+    text-indent: 0;
+    margin-top: 0.5em;
+    font-style: italic;
+}
+
+p.introduction {
+    text-indent: 0;
+    margin-bottom: 0.5em;
+    font-style: italic;
+}
+
+p.detour {
+    text-indent: 0;
+    margin-top: 0.5em;
+}
+
+
+p.postwebpage {
+    text-indent: 0;
+    margin-top: 4mm;
+    font-size: 60%;
+}
+
+/* paragraphs containing <br/> linebreaks */
+p.lines {
+    text-indent: 0;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+p.verse {
+    text-indent: 0;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-style: italic;
+}
+
+p.date, p.index, p.audio {
+    font-family: 'Opera', serif;
+    font-size: 75%;
+    text-indent: 0;
+    margin-bottom: 0;
+    line-height: 1.5em;
+}
+
+p.up {
+    font-family: 'Opera', serif;
+    font-size: 75%;
+    text-indent: 0;
+    margin-bottom: 0;
+    margin-top: 1em;
+    line-height: 1.5em;
+}
+
+
+/* Big Book contents items are paragraphs (in ebooks the items are lists) */
+div.contents p {
+    text-indent: 0;
+    text-align: left;
+}
+
+/* For decorative breaks between sets of paragraphs. The content is typically "*". */
+p.textbreak {
+    text-indent: 0;
+    text-align: center;
+    margin-top: 1em;
+    font-family: 'Opera', monospace;
+}
+
+/* for the "this page intentionally left blank" message in an empty page */
+p.invisible {
+    display: none;
+}
+
+
+ul.index-top-level {       /* no bullets */
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.index-inner-level {  /* bullets as usual */
+
+}
+
+
+
+
+/* lists needs extra vertical spacing to not look cramped  */
+li {
+    line-height: 1.5em;
+    text-align: left;
+}
+
+/* I'm using <div> to group <dt> and <dd> elements,
+   give those a bit the space at the bottom */
+
+dl div {
+    margin-bottom: 0.5em;
+}
+
+
+/* Do not indent first lines of paragraphs where there is white space above */
+hr + p,
+ol + p,
+p.verse + p,
+h1 + p,
+h2 + p,
+div.illustration + p,
+div.verse + p,
+div.contents + p,
+p.byline + p,
+p.introduction + p,
+blockquote + p,
+blockquote > p:first-of-type {
+    text-indent: 0;
+}
+
+ul + p,
+p.textbreak + p,
+div.blockparagraphs + p {
+    text-indent: 0;
+    margin-top: 0.5em;
+}
+
+div.contents {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+div.left-adjusted p {
+    text-align: left;
+}
+
+/* Text blocks ----------------------------------------------------------- */
+
+
+blockquote {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+div.blockparagraphs p {
+    text-indent: 0;
+    margin-top: 1em;
+}
+
+div.verse {
+    margin-bottom: 1em;
+}
+
+div.verse p {
+    text-indent: 0;
+    margin-top: 1em;
+    text-align: left;
+    font-style: italic;
+}
+
+
+/* Inline Text ---------------------------------------------------------------- */
+
+span.symbol {
+    font-family: Icons, serif;
+}
+
+span.speaker {
+    font-family: Icons, serif;
+    font-size: 75%;
+    color: gray;
+}
+
+strong.footnote {
+    color: #ff0000;
+}
+
+span.asterisk {
+    color: red;
+    font-weight: bold;
+}
+
+span.mark {
+    color: red;
+    font-weight: bold;
+}
+
+span.strike {
+    text-decoration: line-through;
+}
+
+em em {
+    font-style: normal;
+}
+
+a {
+    text-decoration: none;
+}
+
+a.internal {
+}
+
+a.hootingyard {
+    text-decoration: underline;
+}
+
+a.external {
+    text-decoration: underline;
+}
+
+a.broken {
+    text-decoration: line-through;
+}
+
+a.internal-image:after, a.external-image:after {
+    content: " \f03e"; /*photo*/
+    font-family: 'Icons', monospace;
+    font-style: normal;
+}
+
+a.internal-audio:after, a.external-audio:after {
+    content: " \f028"; /*speaker*/
+    font-family: 'Icons', monospace;
+    font-style: normal;
+}
+
+a.internal-video:after, a.external-video:after {
+    content: " \f008"; /*film*/
+    font-family: 'Icons', monospace;
+    font-style: normal;
+}
+
+a.internal-data:after, a.external-data:after {
+    content: " \f0c7"; /*disk*/
+    font-family: 'Icons', monospace;
+    font-style: normal;
+}
+
+a.internal-text:after, a.external-text:after {
+    content: " \f0f6"; /*document*/
+    font-family: 'Icons', monospace;
+    font-style: normal;
+}
+
+a.internal-pdf:after, a.external-pdf:after {
+    content: " \f1c1"; /*Adobe*/
+    font-family: 'Icons', monospace;
+    font-style: normal;
+}
+
+
+div.imagerow a.external-image:after {
+    content: "";
+}
+
+div.imagerow a.internal-image:after {
+    content: "";
+}
+
+
+/* Unrecoverably broken links. */
+span.broken {
+    color: blue;
+    text-decoration: line-through;
+}
+
+span.symbol {
+    font-family: 'Icons', monospace
+}
+
+/* Illustrations ----------------------------------------------------------- */
+
+div.illustration {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    width: 100%;
+    /* border-style: solid; border-color: red; */
+}
+
+p.imagerow {
+    text-indent: 0;
+    text-align: center;
+    /* border-style: solid; border-color: blue;  background-color: lightblue; */
+    margin-bottom: 0;
+}
+
+p.imagerow a {
+    text-decoration: none;
+}
+
+p.caption {
+    margin-top: 1mm;
+    font-size: 90%;
+    text-align: center;
+    font-weight: bold;
+    text-indent: 0;
+}
+
+img {
+    display: inline-block; /* display in a row inside p.imagerow */
+    width: 60%; /* medium size by default */
+    /*margin-left: 0.25em;
+    margin-right: 0.25em;
+    margin-bottom: 0;*/
+    /* border-style: solid; border-color: green; */
+}
+
+
+img.small {
+    width: 40%;
+}
+
+img.medium {
+    width: 50%;
+}
+
+img.large {
+    width: 80%;
+}
+
+img.full {
+    width: 100%;
+}
+
+img.fullwidth {
+    width: 100%;
+}
+
+img.cover {
+    height: 100vh;
+    max-width: 100vw;
+}
+
+
+
+/* end */

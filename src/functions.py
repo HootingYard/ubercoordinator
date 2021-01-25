@@ -22,7 +22,7 @@ def sift(sequence: Iterable[A],
     and one for elements that do not.
     :param sequence: the iterable
     :param condition: the condition
-    :return: thw two lists, matching list first
+    :return: the two lists, matching list first
     """
     gold = []
     dross = []
