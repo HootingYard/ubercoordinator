@@ -9,7 +9,7 @@ from index import Index
 def main() -> None:
     index = Index(BIGBOOK_DIR, SHOW_INDEX_FILE)
 
-    templates = TemplateLookup([TEMPLATE_DIR / 'website', TEMPLATE_DIR / 'website' / 'Text'],
+    templates = TemplateLookup([TEMPLATE_DIR / 'website', TEMPLATE_DIR / 'website' / 'Jinja'],
                                strict_undefined=True)
 
     # Create website directories, if necessary.
